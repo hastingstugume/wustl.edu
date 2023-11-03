@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Interactive YouTube Video Quiz</title>
+    <script>
+      window.env = {
+        API_KEY: "AIzaSyDlURqmM6S8JE_dQyTFSLXhl2wRtkBNyrY",
+      };
+    </script>
 
     <style>
       body {
@@ -195,8 +200,10 @@
       } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
 
       // web app's Firebase configuration
+      const apiKey = window.env.API_KEY;
+
       var firebaseConfig = {
-        apiKey: "AIzaSyDlURqmM6S8JE_dQyTFSLXhl2wRtkBNyrY",
+        apiKey: apiKey,
         authDomain: "interactive-video-app.firebaseapp.com",
         projectId: "interactive-video-app",
         storageBucket: "interactive-video-app.appspot.com",
