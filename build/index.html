@@ -141,7 +141,7 @@
         margin-top: 20px;
       }
 
-      input[type="radio"] {
+      input[type="checkbox"] {
         width: 20px;
         height: 20px;
       }
@@ -150,10 +150,10 @@
   <body>
     <!-- User ID Popup -->
     <div class="container">
-      <h1 id="heading">Welcome to our Survey!</h1>
+      <h2 id="heading">Please enter your Participant ID to watch the video</h2>
       <div id="user-id-popup">
-        <label for="userId">Enter Your User ID:</label>
-        <input type="text" id="userId" placeholder="User ID" />
+        <!-- <label for="userId">Enter Your User ID:</label> -->
+        <input type="text" id="userId" placeholder="Participant ID" />
         <div class="submit-button">
           <button id="start-button">Start</button>
         </div>
@@ -170,12 +170,12 @@
         <div class="answer-options">
           <p id="question"></p>
           <div class="con">
-            <input type="radio" name="choice" value="A" id="A" />
+            <input type="checkbox" name="choice" value="A" id="A" />
             <p id="option1"></p>
           </div>
           <input type="text" id="answerInput1" placeholder="Your Response" />
           <div class="con">
-            <input type="radio" name="choice" value="B" id="B" />
+            <input type="checkbox" name="choice" value="B" id="B" />
             <p id="option2"></p>
           </div>
           <input type="text" id="answerInput2" placeholder="Your Response" />
@@ -196,7 +196,7 @@
 
       // web app's Firebase configuration
       var firebaseConfig = {
-        apiKey: "API_KEY_GOES_HERE",
+        apiKey: "AIzaSyDlURqmM6S8JE_dQyTFSLXhl2wRtkBNyrY",
         authDomain: "interactive-video-app.firebaseapp.com",
         projectId: "interactive-video-app",
         storageBucket: "interactive-video-app.appspot.com",
@@ -241,16 +241,19 @@
           userIdPopup.style.display = "none";
           initializeVideo();
         } else {
-          alert("Please enter your user id to continue!");
+          alert("Please enter your participant id to continue!");
         }
       });
       function initializeVideo() {
         player = new YT.Player("video", {
           height: "390",
           width: "640",
-          videoId: "sCzRm3nKXa8",
+          videoId: "API_KEY_GOES_HERE",
           playerVars: {
             playsinline: 1,
+            controls: 0,
+            iv_load_policy: 1,
+            enablejsapi: 3,
           },
           events: {
             onReady: onPlayerReady,
@@ -284,6 +287,43 @@
               }
             }, 1000); // Check every second
           }
+        } else if (event.data == YT.PlayerState.ENDED) {
+          setTimeout(() => {
+            const messageWindow = window.open(
+              "",
+              "Message Window",
+              "fullscreen=yes"
+            );
+            messageWindow.document.write(`
+              <html>
+              <head>
+                <style>
+                  body {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                    background-color: #f0f0f0;
+                  }
+                  p {
+                    font-size: 24px;
+                    text-align: center;
+                    color: #333;
+                  }
+                  </style>
+                  </head>
+                  <body>
+                    <p>Thank you for watching! This tab will close in a moment.</p>
+                    </body>
+                    </html>
+                    `);
+
+            setTimeout(() => {
+              messageWindow.close();
+              window.close();
+            }, 2000);
+          }, 100);
         }
       }
 
@@ -296,54 +336,21 @@
         answerOption1.innerText = questionText.options[0];
         answerOption2.innerText = questionText.options[1];
         questionContainer.style.display = "flex";
-
-        // pauseIntervals = setTimeout(() => {
-        //   if (answerInput1.value.length > 1 || answerInput2.value.length > 1) {
-        //     getData();
-        //   }
-        //   questionContainer.style.display = "none";
-        //   video.style.display = "flex";
-        //   player.playVideo();
-        //   // Clear the question text when the video resumes
-        //   answerInput1.value = "";
-        //   answerInput2.value = "";
-        // }, 30000); // Display question for 30 seconds
       }
 
-      let userResponses = {};
+      function getData(userAnswer1, userAnswer2) {
+        const userResponses = [];
 
-      const A = document.getElementById("A");
-      const B = document.getElementById("B");
-
-      A.addEventListener("change", function () {
-        // Enable input if A is checked, disable otherwise
-        answerInput2.readOnly = this.checked;
-        answerInput1.readOnly = !this.checked;
-        answerInput2.value = "";
-      });
-
-      B.addEventListener("change", function () {
-        // Enable input if B is checked, disable otherwise
-        answerInput2.readOnly = !this.checked;
-        answerInput1.readOnly = this.checked;
-        answerInput1.value = "";
-      });
-
-      A.checked = false;
-      B.checked = false;
-
-      function getData() {
-        const userAnswer1 = answerInput1.value;
-        const userAnswer2 = answerInput2.value;
         if (userAnswer1.length > 1 || userAnswer2.length > 1) {
           const choices = document.getElementsByName("choice");
-          var selectedValue = "";
-          for (var i = 0; i < choices.length; i++) {
-            if (choices[i].checked) {
-              selectedValue = choices[i].value;
-              break;
+          const selected = [];
+
+          // get only the selected choice(s)
+          choices.forEach((choice) => {
+            if (choice.checked) {
+              selected.push({ value: choice.value });
             }
-          }
+          });
 
           // Hide the question container
           questionContainer.style.display = "none";
@@ -357,33 +364,35 @@
           }
 
           // Store user's responses to firebase
-          userResponses = {
-            userID: userID.value,
-            timeOfVideo: Math.floor(player.getCurrentTime()),
-            option:
-              selectedValue ||
-              (userAnswer1?.length > 1
-                ? "A"
-                : userAnswer2?.length > 1
-                ? "B"
-                : ""),
-            response:
-              selectedValue == "A" || userAnswer1.length > 1
-                ? userAnswer1?.length > 1
-                  ? userAnswer1
-                  : ""
-                : userAnswer2.length > 1
-                ? userAnswer2
-                : "",
-          };
+          selected.forEach((choice) => {
+            userResponses.push({
+              userID: userID.value,
+              timeOfVideo: Math.floor(player.getCurrentTime()),
+              option: choice.value,
+              response:
+                choice.value == "A"
+                  ? userAnswer1?.length > 1
+                    ? userAnswer1
+                    : ""
+                  : userAnswer2.length > 1
+                  ? userAnswer2
+                  : "",
+            });
+          });
 
           // Store user data in Firestore
           const usersCollection = collection(db, "users");
-          const docRef = addDoc(usersCollection, userResponses)
-            .then((docRef) => {})
-            .catch((error) => {
-              console.error("Error: ", error);
-            });
+
+          const data = { ...userResponses };
+
+          userResponses.forEach((response) => {
+            const docRef = addDoc(usersCollection, response)
+              .then((docRef) => {})
+              .catch((error) => {
+                console.error("Error: ", error);
+              });
+          });
+
           clearTimeout(pauseIntervals);
           answerInput2.readOnly = false;
           answerInput1.readOnly = false;
@@ -396,15 +405,32 @@
       }
 
       submitButton.addEventListener("click", () => {
+        const userAnswer1 = answerInput1.value;
+        const userAnswer2 = answerInput2.value;
         clearTimeout(pauseIntervals);
-        getData();
+
+        // checking if checkbox is checked
+        const A = document.getElementById("A");
+        const B = document.getElementById("B");
+
+        if (A.checked || B.checked) {
+          if (userAnswer1.length > 1 && !A.checked) {
+            alert("Please select option A.");
+          } else if (userAnswer2 && !B.checked) {
+            alert("Please select option B.");
+          } else {
+            getData(userAnswer1, userAnswer2);
+          }
+        } else {
+          alert("Please select at least one option.");
+        }
       });
 
       function getQuestion() {
         const question = {
-          text: "What were you thinking about right before you saw this prompt? (Select all that apply).",
+          text: "What were you thinking about right before you saw this prompt? (Please select all that apply).",
           options: [
-            "(A). the information being presented in the lecture (Please specify in the box below)",
+            "(A) The information being presented in the lecture (Please specify in the box below)",
             "(B) Something else (Please specify in the box below)",
           ],
         };
