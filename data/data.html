@@ -11,22 +11,22 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="module">
       // Import the necessary libraries
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
       import {
         getFirestore,
         collection,
         getDocs,
-      } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+      } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
       // Initialize Firebase
       const firebaseConfig = {
-        apiKey: "API_KEY_GOES_HERE",
-        authDomain: "interactive-video-app.firebaseapp.com",
-        projectId: "interactive-video-app",
-        storageBucket: "interactive-video-app.appspot.com",
-        messagingSenderId: "1065154399844",
-        appId: "1:1065154399844:web:1d9e581b0bc7bfaac0d971",
-        measurementId: "G-8L3KFLTSH7",
+        apiKey: 'API_KEY_GOES_HERE',
+        authDomain: 'interactive-video-app.firebaseapp.com',
+        projectId: 'interactive-video-app',
+        storageBucket: 'interactive-video-app.appspot.com',
+        messagingSenderId: 'MESSAGING_SENDER_ID_GOES_HERE',
+        appId: 'APP_ID_GOES_HERE',
+        measurementId: 'MEASUREMENT_ID_GOES_HERE',
       };
       const app = initializeApp(firebaseConfig);
 
@@ -35,7 +35,7 @@
 
       // Retrieve data from Firestore collection
       async function getDataFromFirestore() {
-        const querySnapshot = await getDocs(collection(db, "users"));
+        const querySnapshot = await getDocs(collection(db, 'users'));
         const data = [];
 
         querySnapshot.forEach((doc) => {
@@ -53,33 +53,33 @@
 
       // Convert data to CSV format
       function convertToCSV(data) {
-        const header = ["userID", "optionChosen", "response", "timeOfVideo"];
-        const csv = [header.join(",")];
+        const header = ['userID', 'optionChosen', 'response', 'timeOfVideo'];
+        const csv = [header.join(',')];
 
         data.forEach((row) => {
-          csv.push(row.join(","));
+          csv.push(row.join(','));
         });
 
-        return csv.join("\n");
+        return csv.join('\n');
       }
 
       // Create a CSV file and trigger download
       async function createCSV() {
         const data = await getDataFromFirestore();
         const csvData = convertToCSV(data);
-        const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+        const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
+        const a = document.createElement('a');
         a.href = url;
-        a.download = "MyData.csv";
-        a.textContent = "Download CSV";
+        a.download = 'MyData.csv';
+        a.textContent = 'Download CSV';
 
         document.body.appendChild(a);
       }
 
       // Call to the function to create the CSV file
-      const button = document.getElementById("exportButton");
-      button.addEventListener("click", createCSV);
+      const button = document.getElementById('exportButton');
+      button.addEventListener('click', createCSV);
     </script>
   </body>
 </html>

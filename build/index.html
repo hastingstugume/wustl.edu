@@ -104,7 +104,7 @@
         color: azure;
         font-size: 24px;
       }
-      input[type="text"] {
+      input[type='text'] {
         width: 98%;
         height: 90px;
         font-size: 24px;
@@ -141,7 +141,7 @@
         margin-top: 20px;
       }
 
-      input[type="checkbox"] {
+      input[type='checkbox'] {
         width: 20px;
         height: 20px;
       }
@@ -187,22 +187,22 @@
 
     <script type="module">
       // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
       import {
         getFirestore,
         collection,
         addDoc,
-      } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+      } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
       // web app's Firebase configuration
       var firebaseConfig = {
-        apiKey: "API_KEY_GOES_HERE",
-        authDomain: "interactive-video-app.firebaseapp.com",
-        projectId: "interactive-video-app",
-        storageBucket: "interactive-video-app.appspot.com",
-        messagingSenderId: "1065154399844",
-        appId: "1:1065154399844:web:1d9e581b0bc7bfaac0d971",
-        measurementId: "G-8L3KFLTSH7",
+        apiKey: 'API_KEY_GOES_HERE',
+        authDomain: 'interactive-video-app.firebaseapp.com',
+        projectId: 'interactive-video-app',
+        storageBucket: 'interactive-video-app.appspot.com',
+        messagingSenderId: 'MESSAGING_SENDER_ID_GOES_HERE',
+        appId: 'APP_ID_GOES_HERE',
+        measurementId: 'MEASUREMENT_ID_GOES_HERE',
       };
 
       // Initialize Firebase
@@ -212,14 +212,14 @@
       const db = getFirestore(app);
 
       let player;
-      const questionContainer = document.getElementById("question-container");
-      const question = document.getElementById("question");
-      const answerOption1 = document.getElementById("option1");
-      const answerOption2 = document.getElementById("option2");
-      const answerInput1 = document.getElementById("answerInput1");
-      const answerInput2 = document.getElementById("answerInput2");
-      const submitButton = document.getElementById("submit");
-      const userID = document.getElementById("userId");
+      const questionContainer = document.getElementById('question-container');
+      const question = document.getElementById('question');
+      const answerOption1 = document.getElementById('option1');
+      const answerOption2 = document.getElementById('option2');
+      const answerInput1 = document.getElementById('answerInput1');
+      const answerInput2 = document.getElementById('answerInput2');
+      const submitButton = document.getElementById('submit');
+      const userID = document.getElementById('userId');
 
       let videoDuration = 240; // Total duration of the video in seconds
       const numPauses = 4;
@@ -229,26 +229,27 @@
       );
       let pauseIntervals;
       const questionText = getQuestion();
-      const userIdPopup = document.getElementById("user-id-popup");
-      const startButton = document.getElementById("start-button");
+      const userIdPopup = document.getElementById('user-id-popup');
+      const startButton = document.getElementById('start-button');
 
-      startButton.addEventListener("click", () => {
+      startButton.addEventListener('click', () => {
         // Hide the User ID popup and start the video
-        const isUserIdEntered = document.getElementById("userId");
+        const isUserIdEntered = document.getElementById('userId');
         if (isUserIdEntered.value) {
-          const heading = document.getElementById("heading");
-          heading.style.display = "none";
-          userIdPopup.style.display = "none";
+          const heading = document.getElementById('heading');
+          heading.style.display = 'none';
+          userIdPopup.style.display = 'none';
           initializeVideo();
         } else {
-          alert("Please enter your participant id to continue!");
+          alert('Please enter your participant id to continue!');
         }
       });
+
       function initializeVideo() {
-        player = new YT.Player("video", {
-          height: "390",
-          width: "640",
-          videoId: "sCzRm3nKXa8",
+        player = new YT.Player('video', {
+          height: '390',
+          width: '640',
+          videoId: 'YOUTUBE_VIDEO_ID',
           playerVars: {
             playsinline: 1,
             controls: 0,
@@ -290,9 +291,9 @@
         } else if (event.data == YT.PlayerState.ENDED) {
           setTimeout(() => {
             const messageWindow = window.open(
-              "",
-              "Message Window",
-              "fullscreen=yes"
+              '',
+              'Message Window',
+              'fullscreen=yes'
             );
             messageWindow.document.write(`
               <html>
@@ -329,20 +330,20 @@
 
       function pauseVideoAndDisplayQuestion(pauseTime) {
         clearTimeout(pauseIntervals);
-        let video = document.getElementById("video");
-        video.style.display = "none";
+        let video = document.getElementById('video');
+        video.style.display = 'none';
         player.pauseVideo();
         question.innerText = questionText.text;
         answerOption1.innerText = questionText.options[0];
         answerOption2.innerText = questionText.options[1];
-        questionContainer.style.display = "flex";
+        questionContainer.style.display = 'flex';
       }
 
       function getData(userAnswer1, userAnswer2) {
         const userResponses = [];
 
         if (userAnswer1.length > 1 || userAnswer2.length > 1) {
-          const choices = document.getElementsByName("choice");
+          const choices = document.getElementsByName('choice');
           const selected = [];
 
           // get only the selected choice(s)
@@ -353,12 +354,12 @@
           });
 
           // Hide the question container
-          questionContainer.style.display = "none";
-          video.style.display = "flex";
+          questionContainer.style.display = 'none';
+          video.style.display = 'flex';
 
           // clear the input fields
-          answerInput1.value = "";
-          answerInput2.value = "";
+          answerInput1.value = '';
+          answerInput2.value = '';
           for (var i = 0; i < choices.length; i++) {
             choices[i].checked = false;
           }
@@ -370,18 +371,18 @@
               timeOfVideo: Math.floor(player.getCurrentTime()),
               option: choice.value,
               response:
-                choice.value == "A"
+                choice.value == 'A'
                   ? userAnswer1?.length > 1
                     ? userAnswer1
-                    : ""
+                    : ''
                   : userAnswer2.length > 1
                   ? userAnswer2
-                  : "",
+                  : '',
             });
           });
 
           // Store user data in Firestore
-          const usersCollection = collection(db, "users");
+          const usersCollection = collection(db, 'users');
 
           const data = { ...userResponses };
 
@@ -389,7 +390,7 @@
             const docRef = addDoc(usersCollection, response)
               .then((docRef) => {})
               .catch((error) => {
-                console.error("Error: ", error);
+                console.error('Error: ', error);
               });
           });
 
@@ -399,39 +400,39 @@
           // Play the video again immediately
           player.playVideo();
         } else {
-          alert("Please you must enter something to continue");
+          alert('Please you must enter something to continue');
           return;
         }
       }
 
-      submitButton.addEventListener("click", () => {
+      submitButton.addEventListener('click', () => {
         const userAnswer1 = answerInput1.value;
         const userAnswer2 = answerInput2.value;
         clearTimeout(pauseIntervals);
 
         // checking if checkbox is checked
-        const A = document.getElementById("A");
-        const B = document.getElementById("B");
+        const A = document.getElementById('A');
+        const B = document.getElementById('B');
 
         if (A.checked || B.checked) {
           if (userAnswer1.length > 1 && !A.checked) {
-            alert("Please select option A.");
+            alert('Please select option A.');
           } else if (userAnswer2 && !B.checked) {
-            alert("Please select option B.");
+            alert('Please select option B.');
           } else {
             getData(userAnswer1, userAnswer2);
           }
         } else {
-          alert("Please select at least one option.");
+          alert('Please select at least one option.');
         }
       });
 
       function getQuestion() {
         const question = {
-          text: "What were you thinking about right before you saw this prompt? (Please select all that apply).",
+          text: 'What were you thinking about right before you saw this prompt? (Please select all that apply).',
           options: [
-            "(A) The information being presented in the lecture (Please specify in the box below)",
-            "(B) Something else (Please specify in the box below)",
+            '(A) The information being presented in the lecture (Please specify in the box below)',
+            '(B) Something else (Please specify in the box below)',
           ],
         };
         return question;
