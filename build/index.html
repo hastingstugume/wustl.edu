@@ -694,8 +694,8 @@
         player = new YT.Player('video', {
           height: '100%',
           width: '100%',
-          videoId: 'D9N7QaIOkG8',
-          // videoId: 'sCzRm3nKXa8',
+          // videoId: 'D9N7QaIOkG8',
+          videoId: 'sCzRm3nKXa8',
           playerVars: {
             playsinline: 1,
             controls: 0, //Video controls, 0 means no controls
@@ -789,20 +789,37 @@
         const A = document.getElementById('A');
         const B = document.getElementById('B');
 
-        if ((A.checked && userAnswer1) || (B.checked && userAnswer2)) {
-          saveQuestionResponses(userAnswer1, userAnswer2, A.checked, B.checked);
-          // clear the input fields
-          answerInput1.value = '';
-          answerInput2.value = '';
-          const choices = document.getElementsByName('choice');
-          for (var i = 0; i < choices.length; i++) {
-            choices[i].checked = false;
+        if (A.checked || B.checked) {
+          if (userAnswer1.length > 1 && !A.checked) {
+            alert('Please select option A.');
+          } else if (userAnswer2 && !B.checked) {
+            alert('Please select option B.');
+          } else if (!userAnswer1 && A.checked) {
+            alert(
+              'Please explain your choice ("Related to the video content") to continue.'
+            );
+          } else if (!userAnswer2 && B.checked) {
+            alert('Please explain your choice ("Something else") to continue.');
+          } else {
+            saveQuestionResponses(
+              userAnswer1,
+              userAnswer2,
+              A.checked,
+              B.checked
+            );
+            // clear the input fields
+            answerInput1.value = '';
+            answerInput2.value = '';
+            const choices = document.getElementsByName('choice');
+            for (var i = 0; i < choices.length; i++) {
+              choices[i].checked = false;
+            }
+            container2.style.display = 'none';
+            document.getElementById('video-overlay').style.display = 'none';
+            player.playVideo();
           }
-          container2.style.display = 'none';
-          document.getElementById('video-overlay').style.display = 'none';
-          player.playVideo();
         } else {
-          alert('Please provide your responses to continue.');
+          alert('Please provide your responses to continue. Select an option');
         }
       });
 
