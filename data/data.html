@@ -20,7 +20,7 @@
 
       // Initialize Firebase
       const firebaseConfig = {
-        apiKey: "API_KEY_GOES_HERE",
+        apiKey: "AIzaSyDlURqmM6S8JE_dQyTFSLXhl2wRtkBNyrY",
         authDomain: "interactive-video-app.firebaseapp.com",
         projectId: "interactive-video-app",
         storageBucket: "interactive-video-app.appspot.com",
@@ -41,10 +41,10 @@
         querySnapshot.forEach((doc) => {
           const documentData = doc.data();
           data.push([
-            documentData.userID,
+            documentData.ParticipantNumber,
             documentData.option,
             documentData.response,
-            documentData.timeOfVideo,
+            documentData.timeOfVideoInSec,
           ]);
         });
 

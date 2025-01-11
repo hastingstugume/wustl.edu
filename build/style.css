@@ -1,0 +1,292 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+#heading-container {
+  text-align: center; /* Center the heading */
+  margin: 20px 0;
+}
+#video {
+  width: 100%;
+  height: 60vh; /* Video occupies half the page */
+  position: relative;
+}
+#note-response-container {
+  display: none;
+  justify-content: space-between;
+  margin: 10px;
+  padding: 10px;
+}
+.text-box {
+  width: 95%;
+  height: 200px; /* Increased height for better usability */
+  padding: 10px;
+  margin: 0px 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  resize: none;
+}
+#user-id-popup {
+  position: absolute;
+  top: 10; /* 10 below */
+  left: 0;
+  width: 100%;
+  height: 40vh; /* Matches video size */
+  background-color: rgba(71, 137, 128, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 1;
+}
+#user-id-popup label,
+#user-id-popup input,
+#user-id-popup button {
+  margin: 10px;
+  padding: 5px;
+  font-size: 24px;
+}
+#user-id-popup input {
+  width: 300px;
+  height: 40px;
+}
+#start-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  width: 150px;
+  height: 50px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+@media (max-width: 768px) {
+  .question-container {
+    width: 90%;
+    height: 90vh;
+  }
+  #user-id-popup #userId {
+    width: 80%;
+  }
+}
+@media (max-width: 480px) {
+  .question-container {
+    width: 95%;
+    height: 95vh;
+  }
+  #user-id-popup #userId {
+    width: 80%;
+  }
+}
+.question {
+  color: white;
+  background-color: black;
+  border: 1px solid;
+  border-color: rgb(145, 145, 145);
+  border-radius: 5px;
+  padding: 10px;
+}
+input[type='text'] {
+  width: 98%;
+  height: 90px;
+  font-size: 24px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+#submit {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 18px;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+#submit:hover {
+  background-color: #0056b3;
+}
+#container1 {
+  left: 10px;
+  display: none; /* Default state hidden */
+  background-color: rgba(52, 152, 219, 0.5);
+}
+
+#container2 {
+  right: 10px;
+  display: none; /* Default state hidden */
+  background-color: rgba(231, 76, 60, 0.9);
+  border: 1px solid;
+  border-radius: 10px; /* Rounded corners */
+}
+
+textarea {
+  width: 97%; /* Takes full width of the container */
+  height: 50px; /* Increased height for better readability */
+  font-size: 15px;
+  margin-top: 5px; /* Adds spacing from previous elements */
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none; /* Prevents manual resizing */
+}
+
+.con {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Adds space between options */
+}
+
+.con p {
+  margin-left: 10px; /* Adds spacing between checkbox and label */
+}
+
+.overlay-container {
+  position: absolute;
+  top: 10px;
+  width: 45%; /* Ensures containers are proportionally sized */
+  height: auto; /* Adjust height to fit the content */
+  max-height: 90vh; /* Prevents containers from growing too tall */
+  overflow-y: auto; /* Adds scroll if content overflows */
+  z-index: 3; /* Above the overlay */
+  background-color: rgba(0, 0, 0, 0.7); /* Dark background for readability */
+  color: white;
+  padding: 20px; /* Increased padding for better spacing */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds subtle shadow */
+}
+
+.answer-group {
+  margin-bottom: 10px; /* Spacing between answers */
+}
+
+.answer-group label {
+  font-size: 15px;
+  color: white;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.answer-group input[type='checkbox'] {
+  margin-right: 10px; /* Space between checkbox and label text */
+  width: 20px;
+  height: 20px;
+}
+
+.answer-group textarea {
+  width: 97%; /* Takes full width of the container */
+  height: 50px; /* Sets height for uniform appearance */
+  font-size: 16px;
+  margin-top: 5px; /* Adds spacing from previous elements */
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none; /* Prevents manual resizing */
+  background-color: #fff;
+}
+
+.button-container {
+  text-align: right; /* Aligns the button to the right */
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3; /* Slightly darker on hover */
+}
+#video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+  z-index: 2; /* Higher than video but lower than other containers */
+  display: none; /* Hidden by default */
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 20px;
+}
+
+#video-container {
+  position: relative;
+  width: 100%;
+  height: 60vh; /* Matches video height */
+}
+
+/* Styling for the instructions modal */
+#instructions-modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  background-color: rgba(173, 216, 230, 0.2); /* Light blue with transparency */
+  color: black;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(173, 216, 230, 1); /* Light blue border */
+  width: 95%;
+  max-width: 900px;
+  text-align: left;
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+#instructions-modal h2 {
+  margin-top: 0;
+  color: #007bff;
+  font-size: 22px;
+}
+
+#instructions-modal p {
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+#instructions-modal ul {
+  margin: 10px 0;
+  padding-left: 0;
+  list-style-type: none;
+}
+
+#instructions-modal ul li {
+  margin: 10px 0;
+}
+
+#instructions-modal ul li input {
+  margin-right: 10px; /* Space between checkbox and label text */
+  width: 15px;
+  height: 15px;
+}
+
+#instructions-modal button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+#instructions-modal button:hover {
+  background-color: #0056b3;
+}

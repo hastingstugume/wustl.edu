@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive YouTube Video Quiz</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+      }
+      #video-container {
+        position: relative;
+      }
+      #video {
+        width: 100%;
+      }
+      #user-id-popup {
+        width: 50%;
+        height: 50vh;
+        background-color: rgba(71, 137, 128, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 1;
+      }
+      #user-id-popup label,
+      #user-id-popup input,
+      #user-id-popup button {
+        margin: 10px;
+        padding: 5px;
+        font-size: 24px;
+      }
+      #user-id-popup input {
+        width: 300px;
+        height: 40px;
+      }
+      #start-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        width: 150px;
+        height: 50px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      #start-button:hover {
+        background-color: #0056b3;
+      }
+      .question-container {
+        width: 80%;
+        height: 90vh;
+        background-color: rgba(71, 137, 128, 0.8);
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        display: none;
+        z-index: 1;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .question-container h2 {
+        margin-top: 0;
+      }
+      @media (max-width: 768px) {
+        .question-container {
+          width: 90%;
+          height: 90vh;
+        }
+        #user-id-popup #userId {
+          width: 80%;
+        }
+      }
+      @media (max-width: 480px) {
+        .question-container {
+          width: 95%;
+          height: 95vh;
+        }
+        #user-id-popup #userId {
+          width: 80%;
+        }
+      }
+      #question {
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .answer-options {
+        margin: 10px;
+        padding: 10px;
+        align-items: center;
+        justify-content: center;
+      }
+      .answer-options p {
+        color: black;
+      }
+      p {
+        color: azure;
+        font-size: 24px;
+      }
+      input[type='text'] {
+        width: 98%;
+        height: 90px;
+        font-size: 24px;
+        margin-bottom: 10px;
+        padding-left: 10px;
+      }
+      #submit {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        padding: 10px 20px;
+        font-size: 18px;
+      }
+      .con {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      #submit:hover {
+        background-color: #0056b3;
+      }
+      .container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .submit-button {
+        margin-top: 20px;
+      }
+
+      input[type='checkbox'] {
+        width: 20px;
+        height: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- User ID Popup -->
+    <div class="container">
+      <h2 id="heading">
+        Please enter your participant number to watch this video.<br />
+        This is the three-digit number you entered at the begining of the study.
+      </h2>
+      <div id="user-id-popup">
+        <!-- <label for="userId">Enter Your User ID:</label> -->
+        <input type="text" id="userId" placeholder="Participant number" />
+        <div class="submit-button">
+          <button id="start-button">Start</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="video-container">
+      <div
+        id="video"
+        style="position: absolute; top: 0; left: 0; height: 100vh; width: 100%"
+      ></div>
+      <div class="question-container" id="question-container">
+        <!--<h2>Question:</h2> -->
+        <div class="answer-options">
+          <p id="question"></p>
+          <div class="con">
+            <input type="checkbox" name="choice" value="A" id="A" />
+            <p id="option1"></p>
+          </div>
+          <input type="text" id="answerInput1" placeholder="Your Response" />
+          <div class="con">
+            <input type="checkbox" name="choice" value="B" id="B" />
+            <p id="option2"></p>
+          </div>
+          <input type="text" id="answerInput2" placeholder="Your Response" />
+        </div>
+
+        <button id="submit">Continue</button>
+      </div>
+    </div>
+
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+      } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+
+      // web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: 'AIzaSyDlURqmM6S8JE_dQyTFSLXhl2wRtkBNyrY',
+        authDomain: 'interactive-video-app.firebaseapp.com',
+        projectId: 'interactive-video-app',
+        storageBucket: 'interactive-video-app.appspot.com',
+        messagingSenderId: '1065154399844',
+        appId: '1:1065154399844:web:1d9e581b0bc7bfaac0d971',
+        measurementId: 'G-8L3KFLTSH7',
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+
+      // initialise the database
+      const db = getFirestore(app);
+
+      let player;
+      const questionContainer = document.getElementById('question-container');
+      const question = document.getElementById('question');
+      const answerOption1 = document.getElementById('option1');
+      const answerOption2 = document.getElementById('option2');
+      const answerInput1 = document.getElementById('answerInput1');
+      const answerInput2 = document.getElementById('answerInput2');
+      const submitButton = document.getElementById('submit');
+      const userID = document.getElementById('userId');
+
+      let videoDuration = 240; // Total duration of the video in seconds
+      const numPauses = 4;
+      let questionPauseTimes = evenlyDistributedPauseTimes(
+        numPauses,
+        videoDuration
+      );
+      let pauseIntervals;
+      const questionText = getQuestion();
+      const userIdPopup = document.getElementById('user-id-popup');
+      const startButton = document.getElementById('start-button');
+
+      startButton.addEventListener('click', () => {
+        // Hide the User ID popup and start the video
+        const isUserIdEntered = document.getElementById('userId');
+        if (isUserIdEntered.value) {
+          const heading = document.getElementById('heading');
+          heading.style.display = 'none';
+          userIdPopup.style.display = 'none';
+          initializeVideo();
+        } else {
+          alert(
+            'Please enter your participant number (i.e., the three-digit number you entered at the begining of the study) to watch this video!'
+          ); // Prompt participants to enter participant number
+        }
+      });
+      function initializeVideo() {
+        player = new YT.Player('video', {
+          height: '390',
+          width: '640',
+          videoId: 'XwRK-_8DqWE',
+          // videoId: 'sCzRm3nKXa8',
+          playerVars: {
+            playsinline: 1,
+            controls: 0, //Video controls, 0 means no controls
+            iv_load_policy: 1,
+            enablejsapi: 3,
+          },
+          events: {
+            onReady: onPlayerReady,
+            onStateChange: onPlayerStateChange,
+          },
+        });
+      }
+
+      function onPlayerReady(event) {
+        event.target.seekTo(0);
+        // Show the User ID popup
+        videoDuration = event.target.getDuration();
+        questionPauseTimes = evenlyDistributedPauseTimes(
+          numPauses,
+          videoDuration
+        );
+        event.target.playVideo();
+      }
+
+      let currentPauseIndex = 0;
+
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING) {
+          if (currentPauseIndex < numPauses) {
+            const checkPauseInterval = setInterval(() => {
+              const currentTime = Math.round(player.getCurrentTime());
+              if (currentTime == questionPauseTimes[currentPauseIndex]) {
+                pauseVideoAndDisplayQuestion(currentPauseIndex);
+                currentPauseIndex++;
+                clearInterval(checkPauseInterval); // Stop checking once the pause is triggered
+              }
+            }, 1000); // Check every second
+          }
+        } else if (event.data == YT.PlayerState.ENDED) {
+          setTimeout(() => {
+            /* const messageWindow = window.open(
+              "",
+              "Message Window",
+              "fullscreen=yes"
+            );
+            messageWindow.document.write(`
+              <html>
+              <head>
+                <style>
+                  body {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                    background-color: #f0f0f0;
+                  }
+                  p {
+                    font-size: 24px;
+                    text-align: center;
+                    color: #333;
+                  }
+                  </style>
+                  </head>
+                  <body>
+                    <p>Thank you for watching! This tab will close in a moment. <br> Please return to the previous tab to continue with the study</p>
+                    </body>
+                    </html>
+                    `); // Alert participants that the video is aboout to end, and that they should return to the previous tab to continue with the study
+
+            setTimeout(() => {
+              messageWindow.close();
+            }, 2000); */
+            window.close();
+          }, 100);
+        }
+      }
+
+      function pauseVideoAndDisplayQuestion(pauseTime) {
+        clearTimeout(pauseIntervals);
+        let video = document.getElementById('video');
+        video.style.display = 'none';
+        player.pauseVideo();
+        question.innerText = questionText.text;
+        answerOption1.innerText = questionText.options[0];
+        answerOption2.innerText = questionText.options[1];
+        questionContainer.style.display = 'flex';
+      }
+
+      function getData(userAnswer1, userAnswer2) {
+        const userResponses = [];
+
+        if (userAnswer1.length > 1 || userAnswer2.length > 1) {
+          const choices = document.getElementsByName('choice');
+          const selected = [];
+
+          // get only the selected choice(s)
+          choices.forEach((choice) => {
+            if (choice.checked) {
+              selected.push({ value: choice.value });
+            }
+          });
+
+          // Hide the question container
+          questionContainer.style.display = 'none';
+          video.style.display = 'flex';
+
+          // clear the input fields
+          answerInput1.value = '';
+          answerInput2.value = '';
+          for (var i = 0; i < choices.length; i++) {
+            choices[i].checked = false;
+          }
+
+          // Store user's responses to firebase
+          selected.forEach((choice) => {
+            userResponses.push({
+              ParticipantNumber: userID.value, //Participant number variable name
+              timeOfVideoInSec: Math.floor(player.getCurrentTime()), //time of video variable name
+              option: choice.value,
+              response:
+                choice.value == 'A'
+                  ? userAnswer1?.length > 1
+                    ? userAnswer1
+                    : ''
+                  : userAnswer2.length > 1
+                  ? userAnswer2
+                  : '',
+            });
+          });
+
+          // Store user data in Firestore
+          const usersCollection = collection(db, 'test');
+
+          const data = { ...userResponses };
+
+          userResponses.forEach((response) => {
+            const docRef = addDoc(usersCollection, response)
+              .then((docRef) => {})
+              .catch((error) => {
+                console.error('Error: ', error);
+              });
+          });
+
+          clearTimeout(pauseIntervals);
+          answerInput2.readOnly = false;
+          answerInput1.readOnly = false;
+          // Play the video again immediately
+          player.playVideo();
+        } else {
+          alert('Please enter your response(s) to continue'); //Prompt participants to enter response to continue
+          return;
+        }
+      }
+
+      submitButton.addEventListener('click', () => {
+        const userAnswer1 = answerInput1.value;
+        const userAnswer2 = answerInput2.value;
+        clearTimeout(pauseIntervals);
+
+        // checking if checkbox is checked
+        const A = document.getElementById('A');
+        const B = document.getElementById('B');
+
+        if (A.checked || B.checked) {
+          if (userAnswer1.length > 1 && !A.checked) {
+            alert('Please select option A.');
+          } else if (userAnswer2 && !B.checked) {
+            alert('Please select option B.');
+          } else {
+            getData(userAnswer1, userAnswer2);
+          }
+        } else {
+          alert('Please select at least one option.'); //Prompt participants to select a response
+        }
+      });
+      // This shows thought probe and response options
+      function getQuestion() {
+        const question = {
+          text: 'What were you thinking about right before you saw this prompt? (Please select all that apply).',
+          options: [
+            '(A) Something related to the information being presented in the video lecture (Please specify in a phrase or sentence in the box below)', //Instruction for response : double check
+            '(B) Something else (Please specify in a phrase or sentence in the box below)', //Instruction for response
+          ],
+        };
+        return question;
+      }
+
+      function evenlyDistributedPauseTimes(numPauses, videoDuration) {
+        const pauseTimes = [];
+        for (let i = 1; i <= numPauses; i++) {
+          pauseTimes.push(
+            Math.floor(
+              Math.random() * (videoDuration / numPauses) +
+                (i - 1) * (videoDuration / numPauses)
+            )
+          );
+        }
+        return pauseTimes;
+      }
+    </script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+  </body>
+</html>

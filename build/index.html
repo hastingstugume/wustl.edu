@@ -12,15 +12,38 @@
         margin: 0;
         padding: 0;
       }
-      #video-container {
-        position: relative;
+      #heading-container {
+        text-align: center; /* Center the heading */
+        margin: 20px 0;
       }
       #video {
         width: 100%;
+        height: 60vh; /* Video occupies half the page */
+        position: relative;
+      }
+      #note-response-container {
+        display: none;
+        justify-content: space-between;
+        margin: 10px;
+        padding: 10px;
+      }
+      .text-box {
+        width: 95%;
+        height: 200px; /* Increased height for better usability */
+        padding: 10px;
+        margin: 0px 5px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+        resize: none;
       }
       #user-id-popup {
-        width: 50%;
-        height: 50vh;
+        position: absolute;
+        top: 10; /* 10 below */
+        left: 0;
+        width: 100%;
+        height: 40vh; /* Matches video size */
         background-color: rgba(71, 137, 128, 0.8);
         display: flex;
         justify-content: center;
@@ -48,26 +71,6 @@
         cursor: pointer;
         border-radius: 5px;
       }
-      #start-button:hover {
-        background-color: #0056b3;
-      }
-      .question-container {
-        width: 80%;
-        height: 90vh;
-        background-color: rgba(71, 137, 128, 0.8);
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        display: none;
-        z-index: 1;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      .question-container h2 {
-        margin-top: 0;
-      }
       @media (max-width: 768px) {
         .question-container {
           width: 90%;
@@ -86,28 +89,19 @@
           width: 80%;
         }
       }
-      #question {
-        font-size: 28px;
-        font-weight: bold;
-      }
-
-      .answer-options {
-        margin: 10px;
+      .question {
+        color: white;
+        background-color: black;
+        border: 1px solid;
+        border-color: rgb(145, 145, 145);
+        border-radius: 5px;
         padding: 10px;
-        align-items: center;
-        justify-content: center;
       }
-      .answer-options p {
-        color: black;
-      }
-      p {
-        color: azure;
-        font-size: 24px;
-      }
-      input[type="text"] {
+      input[type='text'] {
         width: 98%;
         height: 90px;
         font-size: 24px;
+        margin-right: 10px;
         margin-bottom: 10px;
         padding-left: 10px;
       }
@@ -118,108 +112,461 @@
         cursor: pointer;
         padding: 10px 20px;
         font-size: 18px;
-      }
-      .con {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
+        margin-top: 10px;
+        border-radius: 5px;
       }
       #submit:hover {
         background-color: #0056b3;
       }
-      .container {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.9);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-      }
-      .submit-button {
-        margin-top: 20px;
+      #container1 {
+        left: 10px;
+        display: none; /* Default state hidden */
+        background-color: rgba(52, 152, 219, 0.5);
       }
 
-      input[type="radio"] {
+      #container2 {
+        right: 10px;
+        display: none; /* Default state hidden */
+        background-color: rgba(231, 76, 60, 0.9);
+        border: 1px solid;
+        border-radius: 10px; /* Rounded corners */
+      }
+
+      textarea {
+        width: 97%; /* Takes full width of the container */
+        height: 50px; /* Increased height for better readability */
+        font-size: 15px;
+        margin-top: 5px; /* Adds spacing from previous elements */
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        resize: none; /* Prevents manual resizing */
+      }
+
+      .con {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px; /* Adds space between options */
+      }
+
+      .con p {
+        margin-left: 10px; /* Adds spacing between checkbox and label */
+      }
+
+      .overlay-container {
+        position: absolute;
+        top: 10px;
+        width: 45%; /* Ensures containers are proportionally sized */
+        height: auto; /* Adjust height to fit the content */
+        max-height: 90vh; /* Prevents containers from growing too tall */
+        overflow-y: auto; /* Adds scroll if content overflows */
+        z-index: 3; /* Above the overlay */
+        background-color: rgba(
+          0,
+          0,
+          0,
+          0.7
+        ); /* Dark background for readability */
+        color: white;
+        padding: 20px; /* Increased padding for better spacing */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds subtle shadow */
+      }
+
+      .answer-group {
+        margin-bottom: 10px; /* Spacing between answers */
+      }
+
+      .answer-group label {
+        font-size: 15px;
+        color: white;
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+
+      .answer-group input[type='checkbox'] {
+        margin-right: 10px; /* Space between checkbox and label text */
         width: 20px;
         height: 20px;
+      }
+
+      .answer-group textarea {
+        width: 97%; /* Takes full width of the container */
+        height: 50px; /* Sets height for uniform appearance */
+        font-size: 16px;
+        margin-top: 5px; /* Adds spacing from previous elements */
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        resize: none; /* Prevents manual resizing */
+        background-color: #fff;
+      }
+
+      .button-container {
+        text-align: right; /* Aligns the button to the right */
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #0056b3; /* Slightly darker on hover */
+      }
+      #video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+        z-index: 2; /* Higher than video but lower than other containers */
+        display: none; /* Hidden by default */
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 20px;
+      }
+
+      #video-container {
+        position: relative;
+        width: 100%;
+        height: 60vh; /* Matches video height */
+      }
+
+      /* Styling for the instructions modal */
+      #instructions-modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 100;
+        background-color: rgba(
+          173,
+          216,
+          230,
+          0.2
+        ); /* Light blue with transparency */
+        color: black;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border: 2px solid rgba(173, 216, 230, 1); /* Light blue border */
+        width: 95%;
+        max-width: 900px;
+        text-align: left;
+        overflow-y: auto;
+        max-height: 80vh;
+      }
+
+      #instructions-modal h2 {
+        margin-top: 0;
+        color: #007bff;
+        font-size: 22px;
+      }
+
+      #instructions-modal p {
+        margin: 10px 0;
+        line-height: 1.5;
+      }
+
+      #instructions-modal ul {
+        margin: 10px 0;
+        padding-left: 0;
+        list-style-type: none;
+      }
+
+      #instructions-modal ul li {
+        margin: 10px 0;
+      }
+
+      #instructions-modal ul li input {
+        margin-right: 10px; /* Space between checkbox and label text */
+        width: 15px;
+        height: 15px;
+      }
+
+      #instructions-modal button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 15px;
+      }
+
+      #instructions-modal button:hover {
+        background-color: #0056b3;
       }
     </style>
   </head>
   <body>
-    <!-- User ID Popup -->
-    <div class="container">
-      <h1 id="heading">Welcome to our Survey!</h1>
-      <div id="user-id-popup">
-        <label for="userId">Enter Your User ID:</label>
-        <input type="text" id="userId" placeholder="User ID" />
-        <div class="submit-button">
-          <button id="start-button">Start</button>
-        </div>
+    <div id="heading-container">
+      <h2 id="heading">
+        Please enter your participant number to watch this video.<br />
+        This is the three-digit number you entered at the beginning of the
+        study.
+      </h2>
+    </div>
+    <div id="user-id-popup">
+      <input type="text" id="userId" placeholder="Participant number" />
+      <div class="submit-button">
+        <button id="start-button">Start</button>
       </div>
     </div>
 
-    <div id="video-container">
-      <div
-        id="video"
-        style="position: absolute; top: 0; left: 0; height: 100vh; width: 100%"
-      ></div>
-      <div class="question-container" id="question-container">
-        <h2>Question:</h2>
-        <div class="answer-options">
-          <p id="question"></p>
-          <div class="con">
-            <input type="radio" name="choice" value="A" id="A" />
-            <p id="option1"></p>
-          </div>
-          <input type="text" id="answerInput1" placeholder="Your Response" />
-          <div class="con">
-            <input type="radio" name="choice" value="B" id="B" />
-            <p id="option2"></p>
-          </div>
-          <input type="text" id="answerInput2" placeholder="Your Response" />
-        </div>
+    <div id="instructions-modal">
+      <h2 id="modal-title">Instructions</h2>
+      <div id="modal-content"></div>
+      <button id="accept-button">Proceed</button>
+    </div>
 
+    <div
+      id="error-popup"
+      style="
+        display: none;
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: red;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 9999;
+      "
+    >
+      Error message will appear here.
+    </div>
+
+    <div id="video-container">
+      <div id="video"></div>
+      <div id="video-overlay"></div>
+    </div>
+
+    <div id="container1" class="overlay-container">
+      <p id="qtn" class="question">Additional Question</p>
+      <textarea
+        id="responseBox"
+        placeholder="Type your answer here..."
+      ></textarea>
+      <div class="button-container">
+        <button type="button" id="additional">Submit</button>
+      </div>
+    </div>
+
+    <div id="container2" class="overlay-container">
+      <p id="question" class="question">
+        What were you thinking about before this question appeared?
+      </p>
+      <div class="answer-group">
+        <label>
+          <input type="checkbox" name="choice" value="A" id="A" />
+          Related to the video content
+        </label>
+        <textarea
+          id="answerInput1"
+          placeholder="Explain your answer..."
+        ></textarea>
+      </div>
+      <div class="answer-group">
+        <label>
+          <input type="checkbox" name="choice" value="B" id="B" />
+          Something else
+        </label>
+        <textarea
+          id="answerInput2"
+          placeholder="Explain your answer..."
+        ></textarea>
+      </div>
+      <div class="button-container">
         <button id="submit">Continue</button>
       </div>
     </div>
 
+    <div id="note-response-container">
+      <textarea
+        id="noteBox"
+        class="text-box"
+        placeholder="Take notes here..."
+      ></textarea>
+    </div>
+
     <script type="module">
-      // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+      // Import Firebase modules
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
       import {
         getFirestore,
         collection,
         addDoc,
-      } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+      } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
-      // web app's Firebase configuration
-      var firebaseConfig = {
-        apiKey: "API_KEY_GOES_HERE",
-        authDomain: "interactive-video-app.firebaseapp.com",
-        projectId: "interactive-video-app",
-        storageBucket: "interactive-video-app.appspot.com",
-        messagingSenderId: "1065154399844",
-        appId: "1:1065154399844:web:1d9e581b0bc7bfaac0d971",
-        measurementId: "G-8L3KFLTSH7",
+      const additionalQuestions = [
+        'Considering everyone’s schedules and preferences, what would be the most convenient time for the group to meet for dinner tonight? Please suggest a specific time and explain why it might work best for everyone.',
+        'After the game, where will the party be held? Please provide details about the venue, including the address, start time, and any specific theme or dress code attendees should be aware of.',
+        'With the concert approaching, can we finalize transportation arrangements? Please mention who is available to drive, how many passengers they can accommodate, and any cost-sharing plans for fuel or parking.',
+        'Ever feel like dropping out and chasing a wild dream? If you could quit school today and pursue something unexpected or funny, what would it be and why?',
+        'If my study habits were a TikTok trend, they’d be... Describe your study routine in the most hilarious way possible using a TikTok trend!',
+        'If my grades could talk, they’d probably say... What’s a funny or relatable way to describe your current academic standing?',
+        'Have you registered for next semester’s classes yet, and what courses are you most excited to take or concerned about?',
+        'What’s the assigned reading for [class] next week, and how do you plan to approach the material to get the most out of it?',
+        'What’s the class schedule for [other course] this week, and how do you plan to balance it with your other academic commitments?',
+        'What are your thoughts on what [friend’s name] posted last night? It seemed like something worth talking about.',
+        'How has your project for [other class] been progressing? I’m interested in hearing about what you’ve been working on.',
+        'What do you think about [celebrity]’s new post on Instagram? It seems to have caught a lot of attention online.',
+      ];
+
+      // Randomly decide the layout
+      const layout = Math.random();
+      const randomLayout =
+        layout < 0.25 ? '1' : layout < 0.5 ? '2' : layout < 0.75 ? '3' : '4';
+      console.log('Scenario: ', randomLayout);
+      const displayTimes = [];
+      let currentQuestionIndex = 0;
+
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: 'AIzaSyDlURqmM6S8JE_dQyTFSLXhl2wRtkBNyrY',
+        authDomain: 'interactive-video-app.firebaseapp.com',
+        projectId: 'interactive-video-app',
+        storageBucket: 'interactive-video-app.appspot.com',
+        messagingSenderId: '1065154399844',
+        appId: '1:1065154399844:web:1d9e581b0bc7bfaac0d971',
+        measurementId: 'G-8L3KFLTSH7',
       };
 
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
-
-      // initialise the database
       const db = getFirestore(app);
 
       let player;
-      const questionContainer = document.getElementById("question-container");
-      const question = document.getElementById("question");
-      const answerOption1 = document.getElementById("option1");
-      const answerOption2 = document.getElementById("option2");
-      const answerInput1 = document.getElementById("answerInput1");
-      const answerInput2 = document.getElementById("answerInput2");
-      const submitButton = document.getElementById("submit");
-      const userID = document.getElementById("userId");
+      const questionContainer = document.getElementById('question-container');
+      const question = document.getElementById('question');
+      const answerOption1 = document.getElementById('A');
+      const answerOption2 = document.getElementById('B');
+      const answerInput1 = document.getElementById('answerInput1');
+      const answerInput2 = document.getElementById('answerInput2');
+      const submitButton = document.getElementById('submit');
+      const additionalQtnBtn = document.getElementById('additional');
+      const userID = document.getElementById('userId');
+      const questionPopup = document.getElementById('question-popup');
+
+      const instructionsData = {
+        1: {
+          title: 'Scenario 1 Instructions',
+          content: `
+        <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes. 
+          The program will present a video lecture (~35-40 minutes) from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
+        <p>The video will open in a new tab on your browser. Please enter your participant number (i.e., the three-digit number you entered at the beginning of the study) to watch the video. Do not close the previous tab, as you will have to return to it to continue with the study after watching the video.</p>
+        <p>Do not pause, rewind, or skip parts of, the video. While you are watching the video, prompts will interrupt the lecture occasionally, asking for responses. Please enter your responses to continue with the lecture. We encourage you to respond to all the prompts honestly.</p>
+        <p>Please do not take notes or engage in any other task(s) during the lecture. Just focus on learning the information being presented in the lecture.</p>
+        <p>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</p>
+        <p>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</p>
+        <p>Do you have any questions? If so, please ask the researcher.</p>
+        <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
+        <p><strong>Which of the following is correct? (select all that apply)</strong></p>
+        <ul>
+          <li><label><input type="checkbox" value="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
+          <li><label><input type="checkbox" value="B"> I should respond to all prompts that will interrupt the lecture occasionally while I am watching the video.</label></li>
+          <li><label><input type="checkbox" value="C"> There will be four videos, total.</label></li>
+          <li><label><input type="checkbox" value="D"> I should not take notes or engage in any other tasks during the lecture.</label></li>
+          <li><label><input type="checkbox" value="E"> The video will open in a new tab, but I will have to return to the previous tab after watching the video to continue with the study.</label></li>
+          </ul>
+          <br/>
+          <p>This video opens in a new tab on your browser, which will automatically close after the video finishes. You will have to return to this tab, after watching the video, to continue with the study.</p>
+          <p><strong><i>Click proceed to watch the video</i></p>
+      `,
+          correctAnswers: ['A', 'B', 'D', 'E'],
+        },
+        2: {
+          title: 'Scenario 2 Instructions',
+          content: `
+        <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes. 
+          The program will present a video lecture (~35-40 minutes) from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
+        <p>The video will open in a new tab on your browser. Please enter your participant number (i.e., the three-digit number you entered at the beginning of the study) to watch the video. Do not close the previous tab, as you will have to return to it to continue with the study after watching the video.</p>
+        <p>Do not pause, rewind, or skip parts of, the video. While you are watching the video, prompts will interrupt the lecture occasionally, asking for responses. Please enter your responses to continue with the lecture. We encourage you to respond to all the prompts honestly.</p>
+        <p>Please do not take notes or engage in any other task(s) during the lecture. Just focus on learning the information being presented in the lecture.</p>
+        <p>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</p>
+        <p>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</p>
+        <p>Do you have any questions? If so, please ask the researcher.</p>
+        <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
+        <p><strong>Which of the following is correct? (select all that apply)</strong></p>
+        <ul>
+          <li><label><input type="checkbox" value="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
+          <li><label><input type="checkbox" value="B"> I should respond to all prompts that will interrupt the lecture occasionally while I am watching the video.</label></li>
+          <li><label><input type="checkbox" value="C"> There will be four videos, total.</label></li>
+          <li><label><input type="checkbox" value="D"> I should not take notes or engage in any other tasks during the lecture.</label></li>
+          <li><label><input type="checkbox" value="E"> The video will open in a new tab, but I will have to return to the previous tab after watching the video to continue with the study.</label></li>
+          </ul>
+          <br/>
+          <p>This video opens in a new tab on your browser, which will automatically close after the video finishes. You will have to return to this tab, after watching the video, to continue with the study.</p>
+          <p><strong><i>Click proceed to watch the video</i></p>
+      `,
+          correctAnswers: ['A', 'D', 'E'],
+        },
+        3: {
+          title: 'Scenario 3 Instructions',
+          content: `
+        <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes. 
+          The program will present a video lecture (~35-40 minutes) from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
+        <p>The video will open in a new tab on your browser. Please enter your participant number (i.e., the three-digit number you entered at the beginning of the study) to watch the video. Do not close the previous tab, as you will have to return to it to continue with the study after watching the video.</p>
+        <p>Do not pause, rewind, or skip parts of, the video. While you are watching the video, prompts will interrupt the lecture occasionally, asking for responses. Please enter your responses to continue with the lecture. We encourage you to respond to all the prompts honestly.</p>
+        <p>Please do not take notes or engage in any other task(s) during the lecture. Just focus on learning the information being presented in the lecture.</p>
+        <p>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</p>
+        <p>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</p>
+        <p>Do you have any questions? If so, please ask the researcher.</p>
+        <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
+        <p><strong>Which of the following is correct? (select all that apply)</strong></p>
+        <ul>
+          <li><label><input type="checkbox" value="A" id="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
+          <li><label><input type="checkbox" value="B" id="B"> I should respond to all prompts that will interrupt the lecture occasionally while I am watching the video.</label></li>
+          <li><label><input type="checkbox" value="C" id="C"> There will be four videos, total.</label></li>
+          <li><label><input type="checkbox" value="D" id="D"> I should not take notes or engage in any other tasks during the lecture.</label></li>
+          <li><label><input type="checkbox" value="E" id="E"> The video will open in a new tab, but I will have to return to the previous tab after watching the video to continue with the study.</label></li>
+          </ul>
+          <br/>
+          <p>This video opens in a new tab on your browser, which will automatically close after the video finishes. You will have to return to this tab, after watching the video, to continue with the study.</p>
+          <p><strong><i>Click proceed to watch the video</i></p>
+      `,
+          correctAnswers: ['B', 'D'],
+        },
+        4: {
+          title: 'Scenario 4 Instructions',
+          content: `
+        <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes. 
+          The program will present a video lecture (~35-40 minutes) from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
+        <p>The video will open in a new tab on your browser. Please enter your participant number (i.e., the three-digit number you entered at the beginning of the study) to watch the video. Do not close the previous tab, as you will have to return to it to continue with the study after watching the video.</p>
+        <p>Do not pause, rewind, or skip parts of, the video. While you are watching the video, prompts will interrupt the lecture occasionally, asking for responses. Please enter your responses to continue with the lecture. We encourage you to respond to all the prompts honestly.</p>
+        <p>Please do not take notes or engage in any other task(s) during the lecture. Just focus on learning the information being presented in the lecture.</p>
+        <p>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</p>
+        <p>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</p>
+        <p>Do you have any questions? If so, please ask the researcher.</p>
+        <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
+        <p><strong>Which of the following is correct? (select all that apply)</strong></p>
+        <ul>
+          <li><label><input type="checkbox" value="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
+          <li><label><input type="checkbox" value="B"> I should respond to all prompts that will interrupt the lecture occasionally while I am watching the video.</label></li>
+          <li><label><input type="checkbox" value="C"> There will be four videos, total.</label></li>
+          <li><label><input type="checkbox" value="D"> I should not take notes or engage in any other tasks during the lecture.</label></li>
+          <li><label><input type="checkbox" value="E"> The video will open in a new tab, but I will have to return to the previous tab after watching the video to continue with the study.</label></li>
+          </ul>          
+          <br/>
+          <p>This video opens in a new tab on your browser, which will automatically close after the video finishes. You will have to return to this tab, after watching the video, to continue with the study.</p>
+          <p><strong><i>Click proceed to watch the video</i></p>
+      `,
+          correctAnswers: ['A', 'D', 'C'],
+        },
+      };
 
       let videoDuration = 240; // Total duration of the video in seconds
       const numPauses = 4;
@@ -227,30 +574,133 @@
         numPauses,
         videoDuration
       );
-      let pauseIntervals;
-      const questionText = getQuestion();
-      const userIdPopup = document.getElementById("user-id-popup");
-      const startButton = document.getElementById("start-button");
+      const userIdPopup = document.getElementById('user-id-popup');
+      const startButton = document.getElementById('start-button');
+      const headingContainer = document.getElementById('heading-container');
 
-      startButton.addEventListener("click", () => {
-        // Hide the User ID popup and start the video
-        const isUserIdEntered = document.getElementById("userId");
-        if (isUserIdEntered.value) {
-          const heading = document.getElementById("heading");
-          heading.style.display = "none";
-          userIdPopup.style.display = "none";
+      // Show instructions based on the scenario
+      startButton.addEventListener('click', () => {
+        const userId = document.getElementById('userId').value.trim();
+        if (!userId) {
+          alert('Please enter a valid participant number.');
+          return;
+        }
+
+        // Hide User ID Input and Show Instructions
+        userIdPopup.style.display = 'none';
+        headingContainer.style.display = 'none';
+        document.getElementById('instructions-modal').style.display = 'block';
+        showInstructions(randomLayout);
+      });
+
+      // Check for internet connectivity
+      function isOnline() {
+        return navigator.onLine;
+      }
+
+      // start the survey
+      document.getElementById('accept-button').addEventListener('click', () => {
+        if (!isOnline()) {
+          showErrorMessage(
+            'No internet connection. Please check your connection and try again.'
+          );
+          return; // Stop execution if offline
+        }
+        const modal = document.getElementById('instructions-modal');
+        const correctAnswers = instructionsData[randomLayout].correctAnswers;
+        const selectedAnswers = Array.from(
+          document.querySelectorAll(
+            "#instructions-modal input[type='checkbox']:checked"
+          )
+        ).map((checkbox) => checkbox.value);
+
+        if (
+          selectedAnswers.length === correctAnswers.length &&
+          correctAnswers.every((answer) => selectedAnswers.includes(answer))
+        ) {
+          document.getElementById('error-popup').style.display = 'none';
+          document.getElementById('instructions-modal').style.display = 'none';
           initializeVideo();
         } else {
-          alert("Please enter your user id to continue!");
+          showErrorMessage(
+            'You have selected incorrect options. Please review and try again.'
+          );
         }
       });
+
+      // Function to show error message for incorrect answers
+      function showErrorMessage(message) {
+        const errorPopup = document.getElementById('error-popup');
+        errorPopup.textContent = message;
+        errorPopup.style.display = 'block'; // Show the error message
+
+        // Hide the error message after 5 seconds
+        setTimeout(() => {
+          errorPopup.style.display = 'none';
+        }, 5000); // Hide after 5 seconds
+      }
+
+      // Function to display modal with dynamic content
+      function showInstructions(layoutKey) {
+        const modal = document.getElementById('instructions-modal');
+        const title = document.getElementById('modal-title');
+        const content = document.getElementById('modal-content');
+
+        // Populate modal with data
+        const data = instructionsData[layoutKey];
+        if (data) {
+          title.textContent = data.title;
+          content.innerHTML = data.content;
+          modal.style.display = 'block';
+        } else {
+          console.error(`No instructions found for layout: ${layoutKey}`);
+        }
+      }
+
+      // Initiate video
       function initializeVideo() {
-        player = new YT.Player("video", {
-          height: "390",
-          width: "640",
-          videoId: "sCzRm3nKXa8",
+        const videoContainer = document.getElementById('video');
+        const textBoxes = document.getElementById('note-response-container');
+        const responseContainer = document.getElementById('responseBox');
+        const notesContainer = document.getElementById('noteBox');
+
+        // Adjust layout based on the random choice
+        if (randomLayout === '1') {
+          videoContainer.style.height = '100vh';
+          videoContainer.style.display = 'block';
+          textBoxes.style.display = 'none'; // Hide text box
+          document.getElementById('container2').style.position = '';
+        } else if (randomLayout === '2') {
+          document.getElementById('container2').style.position = '';
+          videoContainer.style.height = '60vh';
+          videoContainer.style.display = 'block';
+          textBoxes.style.display = 'flex'; // Show text box below
+          textBoxes.style.height = '30vh';
+          textBoxes.style.width = '100%';
+          textBoxes.style.marginTop = '5vh';
+        } else if (randomLayout === '3') {
+          videoContainer.style.height = '100vh';
+          videoContainer.style.display = 'block';
+          textBoxes.style.display = 'none'; // Don't show text box below
+        } else {
+          videoContainer.style.height = '60vh';
+          videoContainer.style.display = 'block';
+          textBoxes.style.display = 'flex'; // Show text box below
+          textBoxes.style.height = '30vh';
+          textBoxes.style.width = '100%';
+          textBoxes.style.marginTop = '5vh';
+        }
+
+        player = new YT.Player('video', {
+          height: '100%',
+          width: '100%',
+          videoId: 'D9N7QaIOkG8',
+          // videoId: 'sCzRm3nKXa8',
           playerVars: {
             playsinline: 1,
+            controls: 0, //Video controls, 0 means no controls
+            iv_load_policy: 1,
+            enablejsapi: 3,
           },
           events: {
             onReady: onPlayerReady,
@@ -260,14 +710,25 @@
       }
 
       function onPlayerReady(event) {
-        event.target.seekTo(0);
-        // Show the User ID popup
         videoDuration = event.target.getDuration();
+        const segmentDuration = videoDuration / additionalQuestions.length;
         questionPauseTimes = evenlyDistributedPauseTimes(
           numPauses,
           videoDuration
         );
         event.target.playVideo();
+
+        // Generate random display times evenly distributed
+        for (let i = 0; i < additionalQuestions.length; i++) {
+          const randomOffset = Math.random() * (segmentDuration / 2);
+          displayTimes.push(i * segmentDuration + randomOffset);
+        }
+
+        // Sort display times to ensure sequential order
+        displayTimes.sort((a, b) => a - b);
+
+        // Start checking for message display
+        setInterval(checkAnddisplayAdditionalQuestion, 500);
       }
 
       let currentPauseIndex = 0;
@@ -284,131 +745,28 @@
               }
             }, 1000); // Check every second
           }
+        } else if (event.data == YT.PlayerState.ENDED) {
+          setTimeout(() => {
+            // Save the notes at the end of the video
+            saveNotesToFirebase();
+            window.close();
+          }, 100);
         }
       }
 
-      function pauseVideoAndDisplayQuestion(pauseTime) {
-        clearTimeout(pauseIntervals);
-        let video = document.getElementById("video");
-        video.style.display = "none";
+      function pauseVideoAndDisplayQuestion() {
+        const container2 = document.getElementById('container2');
         player.pauseVideo();
-        question.innerText = questionText.text;
-        answerOption1.innerText = questionText.options[0];
-        answerOption2.innerText = questionText.options[1];
-        questionContainer.style.display = "flex";
-
-        // pauseIntervals = setTimeout(() => {
-        //   if (answerInput1.value.length > 1 || answerInput2.value.length > 1) {
-        //     getData();
-        //   }
-        //   questionContainer.style.display = "none";
-        //   video.style.display = "flex";
-        //   player.playVideo();
-        //   // Clear the question text when the video resumes
-        //   answerInput1.value = "";
-        //   answerInput2.value = "";
-        // }, 30000); // Display question for 30 seconds
-      }
-
-      let userResponses = {};
-
-      const A = document.getElementById("A");
-      const B = document.getElementById("B");
-
-      A.addEventListener("change", function () {
-        // Enable input if A is checked, disable otherwise
-        answerInput2.readOnly = this.checked;
-        answerInput1.readOnly = !this.checked;
-        answerInput2.value = "";
-      });
-
-      B.addEventListener("change", function () {
-        // Enable input if B is checked, disable otherwise
-        answerInput2.readOnly = !this.checked;
-        answerInput1.readOnly = this.checked;
-        answerInput1.value = "";
-      });
-
-      A.checked = false;
-      B.checked = false;
-
-      function getData() {
-        const userAnswer1 = answerInput1.value;
-        const userAnswer2 = answerInput2.value;
-        if (userAnswer1.length > 1 || userAnswer2.length > 1) {
-          const choices = document.getElementsByName("choice");
-          var selectedValue = "";
-          for (var i = 0; i < choices.length; i++) {
-            if (choices[i].checked) {
-              selectedValue = choices[i].value;
-              break;
-            }
-          }
-
-          // Hide the question container
-          questionContainer.style.display = "none";
-          video.style.display = "flex";
-
-          // clear the input fields
-          answerInput1.value = "";
-          answerInput2.value = "";
-          for (var i = 0; i < choices.length; i++) {
-            choices[i].checked = false;
-          }
-
-          // Store user's responses to firebase
-          userResponses = {
-            userID: userID.value,
-            timeOfVideo: Math.floor(player.getCurrentTime()),
-            option:
-              selectedValue ||
-              (userAnswer1?.length > 1
-                ? "A"
-                : userAnswer2?.length > 1
-                ? "B"
-                : ""),
-            response:
-              selectedValue == "A" || userAnswer1.length > 1
-                ? userAnswer1?.length > 1
-                  ? userAnswer1
-                  : ""
-                : userAnswer2.length > 1
-                ? userAnswer2
-                : "",
-          };
-
-          // Store user data in Firestore
-          const usersCollection = collection(db, "users");
-          const docRef = addDoc(usersCollection, userResponses)
-            .then((docRef) => {})
-            .catch((error) => {
-              console.error("Error: ", error);
-            });
-          clearTimeout(pauseIntervals);
-          answerInput2.readOnly = false;
-          answerInput1.readOnly = false;
-          // Play the video again immediately
-          player.playVideo();
-        } else {
-          alert("Please you must enter something to continue");
-          return;
+        container2.style.display = 'block';
+        if (randomLayout == '1' || randomLayout === '2') {
+          container2.style.transform = 'translate(-50%, -50%)';
+          container2.style.top = '50%';
+          container2.style.left = '50%';
         }
-      }
-
-      submitButton.addEventListener("click", () => {
-        clearTimeout(pauseIntervals);
-        getData();
-      });
-
-      function getQuestion() {
-        const question = {
-          text: "What were you thinking about right before you saw this prompt? (Select all that apply).",
-          options: [
-            "(A). the information being presented in the lecture (Please specify in the box below)",
-            "(B) Something else (Please specify in the box below)",
-          ],
-        };
-        return question;
+        if (randomLayout == '1' || randomLayout === '3') {
+          document.getElementById('video-overlay').style.height = '100vh';
+        }
+        document.getElementById('video-overlay').style.display = 'block';
       }
 
       function evenlyDistributedPauseTimes(numPauses, videoDuration) {
@@ -422,6 +780,131 @@
           );
         }
         return pauseTimes;
+      }
+
+      // capture user responses onsubmit (for the question that pauses the video)
+      submitButton.addEventListener('click', () => {
+        const userAnswer1 = answerInput1.value;
+        const userAnswer2 = answerInput2.value;
+        const A = document.getElementById('A');
+        const B = document.getElementById('B');
+
+        if ((A.checked && userAnswer1) || (B.checked && userAnswer2)) {
+          saveQuestionResponses(userAnswer1, userAnswer2, A.checked, B.checked);
+          // clear the input fields
+          answerInput1.value = '';
+          answerInput2.value = '';
+          const choices = document.getElementsByName('choice');
+          for (var i = 0; i < choices.length; i++) {
+            choices[i].checked = false;
+          }
+          container2.style.display = 'none';
+          document.getElementById('video-overlay').style.display = 'none';
+          player.playVideo();
+        } else {
+          alert('Please provide your responses to continue.');
+        }
+      });
+
+      // save additional question responses
+      async function saveAdditionalQuestionResponses(params) {
+        const question = document.getElementById('qtn');
+        if (params.length > 1) {
+          console.log('Response: ', params);
+          try {
+            await addDoc(collection(db, 'finalResponses'), {
+              userId: userID.value,
+              response: params,
+              question: question.textContent,
+              scenario: randomLayout,
+              timestamp: new Date().toISOString(),
+            });
+            responseBox.value = '';
+          } catch (error) {
+            responseBox.value = '';
+            console.error('Error saving final data: ', error);
+          }
+        } else {
+          responseBox.value = '';
+          console.log('Nothing to save');
+        }
+        responseBox.value = '';
+      }
+
+      // capture response onsubmit
+      additionalQtnBtn.addEventListener('click', () => {
+        const response = responseBox.value;
+        saveAdditionalQuestionResponses(response);
+        const questionContainer = document.getElementById('container1');
+        questionContainer.style.display = 'none';
+      });
+
+      // save responses to firebase
+      async function saveQuestionResponses(answer1, answer2, isA, isB) {
+        try {
+          await addDoc(collection(db, 'test'), {
+            userId: userID.value,
+            responses: {
+              A: isA ? answer1 : null,
+              B: isB ? answer2 : null,
+            },
+            timestamp: new Date().toISOString(),
+            videoTime: Math.floor(player.getCurrentTime()),
+          });
+        } catch (error) {
+          console.error('Error saving responses: ', error);
+        }
+      }
+
+      // Capture the notes
+      async function saveNotesToFirebase() {
+        const noteBox = document.getElementById('noteBox').value;
+        try {
+          await addDoc(collection(db, 'notes'), {
+            userId: userID.value,
+            notes: noteBox,
+            scenario: randomLayout,
+            timestamp: new Date().toISOString(),
+          });
+        } catch (error) {
+          console.error('Error saving final data: ', error);
+        }
+      }
+
+      // randomly display additional question
+      function checkAnddisplayAdditionalQuestion() {
+        const currentTime = player.getCurrentTime();
+
+        if (randomLayout === '1' || randomLayout === '2') {
+          console.log(
+            'Skipping additional questions display because it is video scenario ',
+            randomLayout
+          );
+        } else {
+          if (
+            currentQuestionIndex < additionalQuestions.length &&
+            currentTime >= displayTimes[currentQuestionIndex]
+          ) {
+            displayAdditionalQuestion(
+              additionalQuestions[currentQuestionIndex]
+            );
+            currentQuestionIndex++;
+          }
+        }
+      }
+
+      // Display additional question
+      function displayAdditionalQuestion(message) {
+        const container1 = document.getElementById('container1');
+        const qtn = document.getElementById('qtn');
+        qtn.textContent = message;
+        container1.style.display = 'block';
+
+        setTimeout(() => {
+          // save whatever is in the text area if the question disappears before the user clicking submit
+          saveAdditionalQuestionResponses(responseBox.value);
+          container1.style.display = 'none';
+        }, 30000); // Display message for 20 seconds
       }
     </script>
     <script src="https://www.youtube.com/iframe_api"></script>
