@@ -436,13 +436,13 @@
 
       // Firebase configuration
       const firebaseConfig = {
-        apiKey: 'AIzaSyDlURqmM6S8JE_dQyTFSLXhl2wRtkBNyrY',
+        apiKey: 'API_KEY',
         authDomain: 'interactive-video-app.firebaseapp.com',
         projectId: 'interactive-video-app',
         storageBucket: 'interactive-video-app.appspot.com',
-        messagingSenderId: '1065154399844',
-        appId: '1:1065154399844:web:1d9e581b0bc7bfaac0d971',
-        measurementId: 'G-8L3KFLTSH7',
+        messagingSenderId: 'MESSAGING_ID',
+        appId: 'APP_ID',
+        measurementId: 'MSMNT_ID',
       };
 
       // Initialize Firebase
@@ -694,8 +694,8 @@
         player = new YT.Player('video', {
           height: '100%',
           width: '100%',
-          // videoId: 'D9N7QaIOkG8',
-          videoId: 'sCzRm3nKXa8',
+          videoId: 'D9N7QaIOkG8',
+          // videoId: 'sCzRm3nKXa8',
           playerVars: {
             playsinline: 1,
             controls: 0, //Video controls, 0 means no controls
@@ -904,7 +904,7 @@
           // save whatever is in the text area if the question disappears before the user clicking submit
           saveAdditionalQuestionResponses(responseBox.value);
           container1.style.display = 'none';
-        }, 60000); // Display message for 60 seconds
+        }, 15000); // Display message for 60 seconds
       }
     </script>
     <script src="https://www.youtube.com/iframe_api"></script>
