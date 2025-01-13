@@ -318,6 +318,8 @@
         study.
       </h2>
     </div>
+
+    <!-- Box for user ID -->
     <div id="user-id-popup">
       <input type="text" id="userId" placeholder="Participant number" />
       <div class="submit-button">
@@ -325,12 +327,14 @@
       </div>
     </div>
 
+    <!-- Box for instructions -->
     <div id="instructions-modal">
       <h2 id="modal-title">Instructions</h2>
       <div id="modal-content"></div>
       <button id="accept-button">Proceed</button>
     </div>
 
+    <!-- Error message in case of wrong answers -->
     <div
       id="error-popup"
       style="
@@ -349,11 +353,13 @@
       Error message will appear here.
     </div>
 
+    <!-- Video container -->
     <div id="video-container">
       <div id="video"></div>
       <div id="video-overlay"></div>
     </div>
 
+    <!-- Box for additional question popup -->
     <div id="container1" class="overlay-container">
       <p id="qtn" class="question">Additional Question</p>
       <textarea
@@ -365,6 +371,7 @@
       </div>
     </div>
 
+    <!-- the question popup that pauses the video -->
     <div id="container2" class="overlay-container">
       <p id="question" class="question">
         What were you thinking about before this question appeared?
@@ -374,6 +381,7 @@
           <input type="checkbox" name="choice" value="A" id="A" />
           Related to the video content
         </label>
+        <!-- Placeholder for explaining your response -->
         <textarea
           id="answerInput1"
           placeholder="Explain your answer..."
@@ -384,6 +392,7 @@
           <input type="checkbox" name="choice" value="B" id="B" />
           Something else
         </label>
+        <!-- Placeholder for explaining your response -->
         <textarea
           id="answerInput2"
           placeholder="Explain your answer..."
@@ -394,7 +403,9 @@
       </div>
     </div>
 
+    <!-- Box for taking notes -->
     <div id="note-response-container">
+      <!-- Placeholder for taking notes -->
       <textarea
         id="noteBox"
         class="text-box"
@@ -411,6 +422,7 @@
         addDoc,
       } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
 
+      // additional questions
       const additionalQuestions = [
         'Considering everyone’s schedules and preferences, what would be the most convenient time for the group to meet for dinner tonight? Please suggest a specific time and explain why it might work best for everyone.',
         'After the game, where will the party be held? Please provide details about the venue, including the address, start time, and any specific theme or dress code attendees should be aware of.',
@@ -430,7 +442,6 @@
       const layout = Math.random();
       const randomLayout =
         layout < 0.25 ? '1' : layout < 0.5 ? '2' : layout < 0.75 ? '3' : '4';
-      console.log('Scenario: ', randomLayout);
       const displayTimes = [];
       let currentQuestionIndex = 0;
 
@@ -461,6 +472,7 @@
       const userID = document.getElementById('userId');
       const questionPopup = document.getElementById('question-popup');
 
+      // Instructions for each scenario
       const instructionsData = {
         1: {
           title: 'Scenario 1 Instructions',
@@ -622,6 +634,7 @@
           document.getElementById('instructions-modal').style.display = 'none';
           initializeVideo();
         } else {
+          // show error message once the user selects wrong answers
           showErrorMessage(
             'You have selected incorrect options. Please review and try again.'
           );
@@ -672,7 +685,7 @@
           document.getElementById('container2').style.position = '';
         } else if (randomLayout === '2') {
           document.getElementById('container2').style.position = '';
-          videoContainer.style.height = '60vh';
+          videoContainer.style.height = '60vh'; // make the video half screen
           videoContainer.style.display = 'block';
           textBoxes.style.display = 'flex'; // Show text box below
           textBoxes.style.height = '30vh';
@@ -683,7 +696,7 @@
           videoContainer.style.display = 'block';
           textBoxes.style.display = 'none'; // Don't show text box below
         } else {
-          videoContainer.style.height = '60vh';
+          videoContainer.style.height = '60vh'; // make the video half screen
           videoContainer.style.display = 'block';
           textBoxes.style.display = 'flex'; // Show text box below
           textBoxes.style.height = '30vh';
@@ -694,8 +707,8 @@
         player = new YT.Player('video', {
           height: '100%',
           width: '100%',
-          // videoId: 'D9N7QaIOkG8',
-          videoId: 'sCzRm3nKXa8',
+          videoId: 'D9N7QaIOkG8', // video ID
+          // videoId: 'sCzRm3nKXa8',
           playerVars: {
             playsinline: 1,
             controls: 0, //Video controls, 0 means no controls
@@ -795,10 +808,12 @@
           } else if (userAnswer2 && !B.checked) {
             alert('Please select option B.');
           } else if (!userAnswer1 && A.checked) {
+            // inform participants to explain their choice
             alert(
               'Please explain your choice ("Related to the video content") to continue.'
             );
           } else if (!userAnswer2 && B.checked) {
+            // inform participants to explain their choice
             alert('Please explain your choice ("Something else") to continue.');
           } else {
             saveQuestionResponses(
@@ -819,6 +834,7 @@
             player.playVideo();
           }
         } else {
+          // inform participants to choose an option
           alert('Please provide your responses to continue. Select an option');
         }
       });
@@ -827,8 +843,8 @@
       async function saveAdditionalQuestionResponses(params) {
         const question = document.getElementById('qtn');
         if (params.length > 1) {
-          console.log('Response: ', params);
           try {
+            // collection to save additional qtn responses
             await addDoc(collection(db, 'finalResponses'), {
               userId: userID.value,
               response: params,
@@ -843,7 +859,6 @@
           }
         } else {
           responseBox.value = '';
-          console.log('Nothing to save');
         }
         responseBox.value = '';
       }
