@@ -29,11 +29,11 @@
       }
       .text-box {
         width: 95%;
-        height: 200px; /* Increased height for better usability */
+        height: 140px; /* Increased height for better usability */
         padding: 10px;
         margin: 0px 5px;
         font-size: 16px;
-        border: 1px solid #ccc;
+        border: 2px solid #ccc;
         border-radius: 5px;
         background-color: #fff;
         resize: none;
@@ -122,6 +122,9 @@
         left: 10px;
         display: none; /* Default state hidden */
         background-color: rgba(52, 152, 219, 0.5);
+        width: 30%; /* Reduce width to 30% of the parent container */
+        max-width: 300px; /* Set a maximum width for better control */
+        padding: 10px; /* Optional: Add padding for content spacing */
       }
 
       #container2 {
@@ -308,20 +311,31 @@
       #instructions-modal button:hover {
         background-color: #0056b3;
       }
+
+      ul {
+        list-style-type: disc; /* Default bullet style */
+        margin: 0; /* Remove margin around the list */
+        padding: 0; /* Remove padding around the list */
+      }
+
+      li {
+        font-size: 1em; /* Make the font size larger */
+        line-height: 1.5; /* Add space between lines */
+        margin-bottom: 10px; /* Add space between bullet points */
+      }
     </style>
   </head>
   <body>
     <div id="heading-container">
       <h2 id="heading">
-        Please enter your participant number to watch this video.<br />
-        This is the three-digit number you entered at the beginning of the
-        study.
+        Please enter your Connect ID to proceed.<br />
+        This is the same number you entered at the beginning of the study.
       </h2>
     </div>
 
     <!-- Box for user ID -->
     <div id="user-id-popup">
-      <input type="text" id="userId" placeholder="Participant number" />
+      <input type="text" id="userId" placeholder="Connect ID" />
       <div class="submit-button">
         <button id="start-button">Start</button>
       </div>
@@ -331,7 +345,7 @@
     <div id="instructions-modal">
       <h2 id="modal-title">Instructions</h2>
       <div id="modal-content"></div>
-      <button id="accept-button">Proceed</button>
+      <button id="accept-button">Start Lecture</button>
     </div>
 
     <!-- Error message in case of wrong answers -->
@@ -364,27 +378,29 @@
       <p id="qtn" class="question">Additional Question</p>
       <textarea
         id="responseBox"
-        placeholder="Type your answer here..."
+        placeholder="Please provide a complete response here..."
       ></textarea>
       <div class="button-container">
-        <button type="button" id="additional">Submit</button>
+        <button type="button" id="additional">Send</button>
       </div>
     </div>
 
     <!-- the question popup that pauses the video -->
     <div id="container2" class="overlay-container">
       <p id="question" class="question">
-        What were you thinking about before this question appeared?
+        What were you thinking about right before you saw this prompt? (Please
+        select both options if they apply)
       </p>
       <div class="answer-group">
         <label>
           <input type="checkbox" name="choice" value="A" id="A" />
-          Related to the video content
+          Something related to the information being presented in the video
+          lecture
         </label>
         <!-- Placeholder for explaining your response -->
         <textarea
           id="answerInput1"
-          placeholder="Explain your answer..."
+          placeholder="Please specify in a phrase or sentence..."
         ></textarea>
       </div>
       <div class="answer-group">
@@ -395,7 +411,7 @@
         <!-- Placeholder for explaining your response -->
         <textarea
           id="answerInput2"
-          placeholder="Explain your answer..."
+          placeholder="Please specify in a phrase or sentence..."
         ></textarea>
       </div>
       <div class="button-container">
@@ -409,7 +425,7 @@
       <textarea
         id="noteBox"
         class="text-box"
-        placeholder="Take notes here..."
+        placeholder="Please take notes here..."
       ></textarea>
     </div>
 
@@ -424,18 +440,24 @@
 
       // additional questions
       const additionalQuestions = [
-        'Considering everyone’s schedules and preferences, what would be the most convenient time for the group to meet for dinner tonight? Please suggest a specific time and explain why it might work best for everyone.',
-        'After the game, where will the party be held? Please provide details about the venue, including the address, start time, and any specific theme or dress code attendees should be aware of.',
-        'With the concert approaching, can we finalize transportation arrangements? Please mention who is available to drive, how many passengers they can accommodate, and any cost-sharing plans for fuel or parking.',
-        'Ever feel like dropping out and chasing a wild dream? If you could quit school today and pursue something unexpected or funny, what would it be and why?',
-        'If my study habits were a TikTok trend, they’d be... Describe your study routine in the most hilarious way possible using a TikTok trend!',
-        'If my grades could talk, they’d probably say... What’s a funny or relatable way to describe your current academic standing?',
-        'Have you registered for next semester’s classes yet, and what courses are you most excited to take or concerned about?',
-        'What’s the assigned reading for [class] next week, and how do you plan to approach the material to get the most out of it?',
-        'What’s the class schedule for [other course] this week, and how do you plan to balance it with your other academic commitments?',
-        'What are your thoughts on what [friend’s name] posted last night? It seemed like something worth talking about.',
-        'How has your project for [other class] been progressing? I’m interested in hearing about what you’ve been working on.',
-        'What do you think about [celebrity]’s new post on Instagram? It seems to have caught a lot of attention online.',
+        'What are your plans for the weekend?',
+        'Do you have any tips for preparing for an exam?',
+        'How do you stay focused while studying or learning?',
+        'How do you usually plan your vacations?',
+        'What are some of your hobbies?',
+        'What are your favorite places to eat?',
+        'How do you stay connected with friends or family?',
+        'Where are the best places you’ve ever travelled to?',
+        'What’s your favorite way to document your travels?',
+        'How do you stay updated on the latest trends?',
+        'What’s the most exciting thing you’ve done this year?',
+        'How do you balance screen time with other activities?',
+        'How do you usually make new friends or connections?',
+        'What’s a fun fact about yourself that surprises people?',
+        'How do you like to explore a new city or town?',
+        'How do you usually celebrate your birthday?',
+        'What’s your favorite childhood memory?',
+        'How do you like to spend your free time?',
       ];
 
       // Randomly decide the layout
@@ -475,108 +497,112 @@
       // Instructions for each scenario
       const instructionsData = {
         1: {
-          title: 'Scenario 1 Instructions',
+          title: 'Please read these instructions carefully!!!',
           content: `
         <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes. 
           The program will present a video lecture (~35-40 minutes) from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
-        <p>The video will open in a new tab on your browser. Please enter your participant number (i.e., the three-digit number you entered at the beginning of the study) to watch the video. Do not close the previous tab, as you will have to return to it to continue with the study after watching the video.</p>
-        <p>Do not pause, rewind, or skip parts of, the video. While you are watching the video, prompts will interrupt the lecture occasionally, asking for responses. Please enter your responses to continue with the lecture. We encourage you to respond to all the prompts honestly.</p>
-        <p>Please do not take notes or engage in any other task(s) during the lecture. Just focus on learning the information being presented in the lecture.</p>
-        <p>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</p>
-        <p>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</p>
-        <p>Do you have any questions? If so, please ask the researcher.</p>
+        <li>Do NOT pause, rewind, or skip parts of, the video. While you are watching the video, thought probes will interrupt the lecture occasionally, automatically pausing it and asking about what you are thinking. Please enter your responses to resume the lecture. Kindly respond to all the probes honestly.</li>
+        <li>Do NOT take notes or engage in any other task(s) during the lecture. Just focus on learning the information being presented in the lecture.</li>
+        <li>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically close the browser tab and advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</li>
+        <li>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</li>
+        <p>Do you have any questions? If so, please contact the researcher at <strong>3145831948</strong> or <strong>m.zubeiru@wustl.edu.</strong></p>
         <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
         <p><strong>Which of the following is correct? (select all that apply)</strong></p>
         <ul>
           <li><label><input type="checkbox" value="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
-          <li><label><input type="checkbox" value="B"> I should respond to all prompts that will interrupt the lecture occasionally while I am watching the video.</label></li>
+          <li><label><input type="checkbox" value="B"> I should respond to all thought probes that will interrupt the lecture occasionally, asking me about what I am thinking.</label></li>
           <li><label><input type="checkbox" value="C"> There will be four videos, total.</label></li>
           <li><label><input type="checkbox" value="D"> I should not take notes or engage in any other tasks during the lecture.</label></li>
-          <li><label><input type="checkbox" value="E"> The video will open in a new tab, but I will have to return to the previous tab after watching the video to continue with the study.</label></li>
+          <li><label><input type="checkbox" value="E"> This tab will automatically close once the video finishes, and I will have to return to the previous tab to continue with the study.</label></li>
+          <li><label><input type="checkbox" value="F"> I am not allowed to pause, rewind or skip parts of the video lecture.</label></li>
           </ul>
           <br/>
-          <p>This video opens in a new tab on your browser, which will automatically close after the video finishes. You will have to return to this tab, after watching the video, to continue with the study.</p>
-          <p><strong><i>Click proceed to watch the video</i></p>
+          
+          <p><strong><i>Click "Start Lecture" below to watch the video</i></p>
       `,
-          correctAnswers: ['A', 'B', 'D', 'E'],
+          correctAnswers: ['A', 'B', 'D', 'E', 'F'],
         },
         2: {
-          title: 'Scenario 2 Instructions',
+          title: 'Please read these instructions carefully!!!',
           content: `
         <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes. 
-          The program will present a video lecture (~35-40 minutes) from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
-        <p>The video will open in a new tab on your browser. Please enter your participant number (i.e., the three-digit number you entered at the beginning of the study) to watch the video. Do not close the previous tab, as you will have to return to it to continue with the study after watching the video.</p>
-        <p>Do not pause, rewind, or skip parts of, the video. While you are watching the video, prompts will interrupt the lecture occasionally, asking for responses. Please enter your responses to continue with the lecture. We encourage you to respond to all the prompts honestly.</p>
-        <p>Please do not take notes or engage in any other task(s) during the lecture. Just focus on learning the information being presented in the lecture.</p>
-        <p>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</p>
-        <p>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</p>
-        <p>Do you have any questions? If so, please ask the researcher.</p>
+          The program will present a video lecture from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
+        <li>Do NOT pause, rewind, or skip parts of, the video. While you are watching the video, thought probes will interrupt the lecture occasionally, automatically pausing it and asking about what you are thinking. Please enter your responses to resume the lecture. Kindly respond to all the probes honestly.</li>
+        <li>A textbox will be provided below the lecture video for you to take notes during the lecture. Please take notes in the way that you normally would do during a lecture in typical college classes. Your notes will be automatically saved once the video finishes. Please be assured that your notes will be kept confidential and used solely for the purpose of this research study.</li>
+        <li>Do NOT engage in any other tasks (e.g., browsing the web) other than taking notes and responding to the thought probes.</li>
+        <li>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically close the browser tab and advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</li>
+        <li>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</li>
+        <p>Do you have any questions? If so, please contact the researcher at <strong>3145831948</strong> or <strong>m.zubeiru@wustl.edu.</strong></p>
         <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
         <p><strong>Which of the following is correct? (select all that apply)</strong></p>
         <ul>
           <li><label><input type="checkbox" value="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
-          <li><label><input type="checkbox" value="B"> I should respond to all prompts that will interrupt the lecture occasionally while I am watching the video.</label></li>
-          <li><label><input type="checkbox" value="C"> There will be four videos, total.</label></li>
-          <li><label><input type="checkbox" value="D"> I should not take notes or engage in any other tasks during the lecture.</label></li>
-          <li><label><input type="checkbox" value="E"> The video will open in a new tab, but I will have to return to the previous tab after watching the video to continue with the study.</label></li>
+          <li><label><input type="checkbox" value="B"> I will be able to rewatch the video after completing the study.</label></li>
+          <li><label><input type="checkbox" value="C"> I should respond to all thought probes that will interrupt the lecture occasionally, asking me about what I am thinking.</label></li>
+          <li><label><input type="checkbox" value="D"> I am not allowed to engage in any other tasks during the lecture other than taking notes and responding to the thought probes.</label></li>
+          <li><label><input type="checkbox" value="E"> This tab will automatically close once the video finishes, and I will have to return to the previous tab to continue with the study.</label></li>
+          <li><label><input type="checkbox" value="F"> I am not allowed to pause, rewind or skip parts of the video lecture.</label></li>
           </ul>
           <br/>
-          <p>This video opens in a new tab on your browser, which will automatically close after the video finishes. You will have to return to this tab, after watching the video, to continue with the study.</p>
-          <p><strong><i>Click proceed to watch the video</i></p>
+          
+          <p><strong><i>Click "Start Lecture" below to watch the video</i></p>
       `,
-          correctAnswers: ['A', 'D', 'E'],
+          correctAnswers: ['A', 'C', 'D', 'E', 'F'],
         },
         3: {
-          title: 'Scenario 3 Instructions',
+          title: 'Please read these instructions carefully!!!',
           content: `
         <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes. 
           The program will present a video lecture (~35-40 minutes) from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
-        <p>The video will open in a new tab on your browser. Please enter your participant number (i.e., the three-digit number you entered at the beginning of the study) to watch the video. Do not close the previous tab, as you will have to return to it to continue with the study after watching the video.</p>
-        <p>Do not pause, rewind, or skip parts of, the video. While you are watching the video, prompts will interrupt the lecture occasionally, asking for responses. Please enter your responses to continue with the lecture. We encourage you to respond to all the prompts honestly.</p>
-        <p>Please do not take notes or engage in any other task(s) during the lecture. Just focus on learning the information being presented in the lecture.</p>
-        <p>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</p>
-        <p>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</p>
-        <p>Do you have any questions? If so, please ask the researcher.</p>
+        <li>Do NOT pause, rewind, or skip parts of, the video. While you are watching the video, thought probes will appear on the right side of the screen, automatically pausing the lecture occasionally and asking about what you are thinking. Please enter your responses to resume the lecture. Kindly respond to all the probes honestly.</li>
+        <li>Along with the thought probes, you will respond to pop-up messages appearing on the top left side of the screen during the lecture. Treat these as chat messages from a friend, providing a clear and detailed response to each message within ONE minute (1 Min) before it disappears. If unsure, please create a plausible response; do NOT say "No" or “I don’t know.”</li>
+        <li>Do NOT take notes or engage in any other tasks (e.g., browsing the web) during the lecture other than responding to the thought probes and chat messages.</li>
+        <li>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically close the browser tab and advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</li>
+        <li>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</li>
+        <p>Do you have any questions? If so, please contact the researcher at <strong>3145831948</strong> or <strong>m.zubeiru@wustl.edu.</strong></p>
         <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
         <p><strong>Which of the following is correct? (select all that apply)</strong></p>
         <ul>
           <li><label><input type="checkbox" value="A" id="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
-          <li><label><input type="checkbox" value="B" id="B"> I should respond to all prompts that will interrupt the lecture occasionally while I am watching the video.</label></li>
-          <li><label><input type="checkbox" value="C" id="C"> There will be four videos, total.</label></li>
-          <li><label><input type="checkbox" value="D" id="D"> I should not take notes or engage in any other tasks during the lecture.</label></li>
-          <li><label><input type="checkbox" value="E" id="E"> The video will open in a new tab, but I will have to return to the previous tab after watching the video to continue with the study.</label></li>
+          <li><label><input type="checkbox" value="B" id="B"> I should respond to all chat messages and thought probes that will interrupt the lecture occasionally.</label></li>
+          <li><label><input type="checkbox" value="C" id="C"> I am not allowed to take notes or engage in any other tasks during the lecture other than responding to the chat messages and thought probes.</label></li>
+          <li><label><input type="checkbox" value="D" id="D"> This tab will automatically close after the video finishes, and I will have to return to the previous tab to continue with the study.</label></li>
+          <li><label><input type="checkbox" value="E" id="E"> I will receive a transcript of the lecture after watching it to review the content.</label></li>
+          <li><label><input type="checkbox" value="F" id="F"> I am not allowed to pause, rewind or skip parts of the video lecture.</label></li>
           </ul>
           <br/>
-          <p>This video opens in a new tab on your browser, which will automatically close after the video finishes. You will have to return to this tab, after watching the video, to continue with the study.</p>
-          <p><strong><i>Click proceed to watch the video</i></p>
+          
+          <p><strong><i>Click "Start Lecture" below to watch the video</i></p>
       `,
-          correctAnswers: ['B', 'D'],
+          correctAnswers: ['A', 'B', 'C', 'D', 'F'],
         },
         4: {
-          title: 'Scenario 4 Instructions',
+          title: 'Please read these instructions carefully!!!',
           content: `
         <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes. 
-          The program will present a video lecture (~35-40 minutes) from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
-        <p>The video will open in a new tab on your browser. Please enter your participant number (i.e., the three-digit number you entered at the beginning of the study) to watch the video. Do not close the previous tab, as you will have to return to it to continue with the study after watching the video.</p>
-        <p>Do not pause, rewind, or skip parts of, the video. While you are watching the video, prompts will interrupt the lecture occasionally, asking for responses. Please enter your responses to continue with the lecture. We encourage you to respond to all the prompts honestly.</p>
-        <p>Please do not take notes or engage in any other task(s) during the lecture. Just focus on learning the information being presented in the lecture.</p>
-        <p>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</p>
-        <p>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</p>
-        <p>Do you have any questions? If so, please ask the researcher.</p>
+          The program will present a video lecture from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</li>
+        <li>Do NOT pause, rewind, or skip parts of, the video. While you are watching the video, thought probes will appear on the right side of the screen, automatically pausing the lecture occasionally and asking about what you are thinking. Please enter your responses to resume the lecture. Kindly respond to all the probes honestly.</li>
+        <li>Along with the thought probes, you will respond to pop-up messages appearing on the top left side of the screen during the lecture. Treat these as chat messages from a friend, providing a clear and detailed response to each message within ONE minute (1 min) before it disappears. If unsure, please create a plausible response; do NOT say "No" or “I don’t know.”</li>
+        <li>A textbox will be provided below the lecture video for you to take notes during the lecture. Please take notes in the way that you normally would do during a lecture in typical college classes. Your notes will be automatically saved once the video finishes. Please be assured that your notes will be kept confidential and used solely for the purpose of this research study.</li>
+        <li>Do NOT engage in any other tasks (e.g., browsing the web) during the lecture other than taking notes and responding to the thought probes and chat messages.</li>
+        <li>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically close the browser tab and advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</li>
+        <li>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</li>
+        <p>Do you have any questions? If so, please contact the researcher at <strong>3145831948</strong> or <strong>m.zubeiru@wustl.edu.</strong></p>
         <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
         <p><strong>Which of the following is correct? (select all that apply)</strong></p>
         <ul>
           <li><label><input type="checkbox" value="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
-          <li><label><input type="checkbox" value="B"> I should respond to all prompts that will interrupt the lecture occasionally while I am watching the video.</label></li>
-          <li><label><input type="checkbox" value="C"> There will be four videos, total.</label></li>
-          <li><label><input type="checkbox" value="D"> I should not take notes or engage in any other tasks during the lecture.</label></li>
-          <li><label><input type="checkbox" value="E"> The video will open in a new tab, but I will have to return to the previous tab after watching the video to continue with the study.</label></li>
+          <li><label><input type="checkbox" value="B"> I should respond to all chat messages and thought probes that will interrupt the lecture occasionally.</label></li>
+          <li><label><input type="checkbox" value="C"> I am not allowed to engage in any other tasks during the lecture other than taking notes and responding to the chat messages and thought probes.</label></li>
+          <li><label><input type="checkbox" value="D"> This tab will automatically close after the video lecture finishes, and I will have to return to the previous tab to continue with the study.</label></li>
+          <li><label><input type="checkbox" value="E"> I am not allowed to pause, rewind or skip parts of the video lecture.</label></li>
+          <li><label><input type="checkbox" value="F"> The video lecture will provide captions that I can turn on or off at any time.</label></li>
           </ul>          
           <br/>
-          <p>This video opens in a new tab on your browser, which will automatically close after the video finishes. You will have to return to this tab, after watching the video, to continue with the study.</p>
-          <p><strong><i>Click proceed to watch the video</i></p>
+          
+          <p><strong><i>Click "Start Lecture" below to watch the video</i></p>
       `,
-          correctAnswers: ['A', 'D', 'C'],
+          correctAnswers: ['A', 'B', 'C', 'D', 'E'],
         },
       };
 
@@ -594,7 +620,7 @@
       startButton.addEventListener('click', () => {
         const userId = document.getElementById('userId').value.trim();
         if (!userId) {
-          alert('Please enter a valid participant number.');
+          alert('Please enter your Connect ID to start.');
           return;
         }
 
@@ -636,7 +662,7 @@
         } else {
           // show error message once the user selects wrong answers
           showErrorMessage(
-            'You have selected incorrect options. Please review and try again.'
+            'Incorrect options! Kindly review the instructions above carefully and select the correct options before you proceed to watch the lecture.'
           );
         }
       });
@@ -650,7 +676,7 @@
         // Hide the error message after 5 seconds
         setTimeout(() => {
           errorPopup.style.display = 'none';
-        }, 5000); // Hide after 5 seconds
+        }, 7000); // Hide after 5 seconds
       }
 
       // Function to display modal with dynamic content
@@ -679,7 +705,7 @@
 
         // Adjust layout based on the random choice
         if (randomLayout === '1') {
-          videoContainer.style.height = '100vh';
+          videoContainer.style.height = '60vh'; //100
           videoContainer.style.display = 'block';
           textBoxes.style.display = 'none'; // Hide text box
           document.getElementById('container2').style.position = '';
@@ -692,7 +718,7 @@
           textBoxes.style.width = '100%';
           textBoxes.style.marginTop = '5vh';
         } else if (randomLayout === '3') {
-          videoContainer.style.height = '100vh';
+          videoContainer.style.height = '60vh'; //100
           videoContainer.style.display = 'block';
           textBoxes.style.display = 'none'; // Don't show text box below
         } else {
@@ -707,8 +733,8 @@
         player = new YT.Player('video', {
           height: '100%',
           width: '100%',
-          videoId: 'D9N7QaIOkG8', // video ID
-          // videoId: 'sCzRm3nKXa8',
+          //videoId: 'D9N7QaIOkG8', // video ID
+          videoId: 'sCzRm3nKXa8',
           playerVars: {
             playsinline: 1,
             controls: 0, //Video controls, 0 means no controls
@@ -802,6 +828,7 @@
         const A = document.getElementById('A');
         const B = document.getElementById('B');
 
+        // Check probe responses and alert participants
         if (A.checked || B.checked) {
           if (userAnswer1.length > 1 && !A.checked) {
             alert('Please select option A.');
@@ -809,12 +836,10 @@
             alert('Please select option B.');
           } else if (!userAnswer1 && A.checked) {
             // inform participants to explain their choice
-            alert(
-              'Please explain your choice ("Related to the video content") to continue.'
-            );
+            alert('Please specify in a phrase or sentence to continue.');
           } else if (!userAnswer2 && B.checked) {
             // inform participants to explain their choice
-            alert('Please explain your choice ("Something else") to continue.');
+            alert('Please specify in a phrase or sentence to continue.');
           } else {
             saveQuestionResponses(
               userAnswer1,
@@ -835,7 +860,9 @@
           }
         } else {
           // inform participants to choose an option
-          alert('Please provide your responses to continue. Select an option');
+          alert(
+            'Please select one or both options (if they apply) to continue.'
+          );
         }
       });
 
@@ -845,7 +872,7 @@
         if (params.length > 1) {
           try {
             // collection to save additional qtn responses
-            await addDoc(collection(db, 'finalResponses'), {
+            await addDoc(collection(db, 'ChatResponses'), {
               userId: userID.value,
               response: params,
               question: question.textContent,
@@ -863,18 +890,22 @@
         responseBox.value = '';
       }
 
-      // capture response onsubmit
+      // capture response for additional questions and alert participants submit and
       additionalQtnBtn.addEventListener('click', () => {
         const response = responseBox.value;
-        saveAdditionalQuestionResponses(response);
-        const questionContainer = document.getElementById('container1');
-        questionContainer.style.display = 'none';
+        if (response.length < 10) {
+          alert('Please provide a more detailed response');
+        } else {
+          saveAdditionalQuestionResponses(response);
+          const questionContainer = document.getElementById('container1');
+          questionContainer.style.display = 'none';
+        }
       });
 
       // save responses to firebase
       async function saveQuestionResponses(answer1, answer2, isA, isB) {
         try {
-          await addDoc(collection(db, 'test'), {
+          await addDoc(collection(db, 'ThoughtProbes'), {
             userId: userID.value,
             responses: {
               A: isA ? answer1 : null,
@@ -888,7 +919,7 @@
         }
       }
 
-      // Capture the notes
+      // Capture the notes (id for firebase)
       async function saveNotesToFirebase() {
         const noteBox = document.getElementById('noteBox').value;
         try {
@@ -936,7 +967,7 @@
           // save whatever is in the text area if the question disappears before the user clicking submit
           saveAdditionalQuestionResponses(responseBox.value);
           container1.style.display = 'none';
-        }, 15000); // Display message for 60 seconds
+        }, 60000); // Display message for 60 seconds
       }
     </script>
     <script src="https://www.youtube.com/iframe_api"></script>

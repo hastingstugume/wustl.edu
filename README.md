@@ -24,6 +24,15 @@ Certainly! Here's a description you can use when creating a GitHub repository fo
 This repository contains the HTML, CSS, and JavaScript code required to create the interactive video quiz application.
 It uses the YouTube Iframe API and Firebase JavaScript SDK for video integration and data storage.
 
+
+## open a file:
+
+opend folder + cmd on the directory bar + enter
+code + 2 spaces + enter
+
 ## To deploy the app on firebase, run the following command in the terminal:
 
 firebase deploy --only hosting
+firebase login
+firebase init hosting
+firebase logout
