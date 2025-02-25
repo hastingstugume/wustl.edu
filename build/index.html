@@ -479,7 +479,7 @@
       ];
 
       // Randomly decide the layout
-      const layout = await updateAndReturnMax();
+      const layout = await updateAndReturnMaxScenario();
       const randomLayout =
         layout === 'S1'
           ? '1'
@@ -790,6 +790,8 @@
             const checkPauseInterval = setInterval(() => {
               const currentTime = Math.round(player.getCurrentTime());
               if (currentTime == questionPauseTimes[currentPauseIndex]) {
+                // Save notes before pausing the video
+                saveNotesToFirebase();
                 pauseVideoAndDisplayQuestion(currentPauseIndex);
                 currentPauseIndex++;
                 clearInterval(checkPauseInterval); // Stop checking once the pause is triggered
@@ -982,7 +984,7 @@
         }, 60000); // Display message for 60 seconds
       }
 
-      async function updateAndReturnMax() {
+      async function updateAndReturnMaxScenario() {
         try {
           // Reference to the document containing the four variables
           const docRef = doc(db, 'scenarios', 'scenarios');
