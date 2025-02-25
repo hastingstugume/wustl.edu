@@ -436,7 +436,25 @@
         getFirestore,
         collection,
         addDoc,
+        getDoc,
+        updateDoc,
+        doc,
       } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: 'API_KEY',
+        authDomain: 'interactive-video-app.firebaseapp.com',
+        projectId: 'interactive-video-app',
+        storageBucket: 'interactive-video-app.appspot.com',
+        messagingSenderId: 'MESSAGING_ID',
+        appId: 'APP_ID',
+        measurementId: 'MSMNT_ID',
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
 
       // additional questions
       const additionalQuestions = [
@@ -461,26 +479,20 @@
       ];
 
       // Randomly decide the layout
-      const layout = Math.random();
+      const layout = await updateAndReturnMax();
       const randomLayout =
-        layout < 0.25 ? '1' : layout < 0.5 ? '2' : layout < 0.75 ? '3' : '4';
+        layout === 'S1'
+          ? '1'
+          : layout === 'S2'
+          ? '2'
+          : layout === 'S3'
+          ? '3'
+          : layout === 'S3'
+          ? '4'
+          : '0';
+      console.log(randomLayout);
       const displayTimes = [];
       let currentQuestionIndex = 0;
-
-      // Firebase configuration
-      const firebaseConfig = {
-        apiKey: 'API_KEY',
-        authDomain: 'interactive-video-app.firebaseapp.com',
-        projectId: 'interactive-video-app',
-        storageBucket: 'interactive-video-app.appspot.com',
-        messagingSenderId: 'MESSAGING_ID',
-        appId: 'APP_ID',
-        measurementId: 'MSMNT_ID',
-      };
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
 
       let player;
       const questionContainer = document.getElementById('question-container');
@@ -499,109 +511,109 @@
         1: {
           title: 'Please read these instructions carefully!!!',
           content: `
-        <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes. 
-          The program will present a video lecture (~35-40 minutes) from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
-        <li>Do NOT pause, rewind, or skip parts of, the video. While you are watching the video, thought probes will interrupt the lecture occasionally, automatically pausing it and asking about what you are thinking. Please enter your responses to resume the lecture. Kindly respond to all the probes honestly.</li>
-        <li>Do NOT take notes or engage in any other task(s) during the lecture. Just focus on learning the information being presented in the lecture.</li>
-        <li>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically close the browser tab and advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</li>
-        <li>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</li>
-        <p>Do you have any questions? If so, please contact the researcher at <strong>3145831948</strong> or <strong>m.zubeiru@wustl.edu.</strong></p>
-        <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
-        <p><strong>Which of the following is correct? (select all that apply)</strong></p>
-        <ul>
-          <li><label><input type="checkbox" value="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
-          <li><label><input type="checkbox" value="B"> I should respond to all thought probes that will interrupt the lecture occasionally, asking me about what I am thinking.</label></li>
-          <li><label><input type="checkbox" value="C"> There will be four videos, total.</label></li>
-          <li><label><input type="checkbox" value="D"> I should not take notes or engage in any other tasks during the lecture.</label></li>
-          <li><label><input type="checkbox" value="E"> This tab will automatically close once the video finishes, and I will have to return to the previous tab to continue with the study.</label></li>
-          <li><label><input type="checkbox" value="F"> I am not allowed to pause, rewind or skip parts of the video lecture.</label></li>
-          </ul>
-          <br/>
-          
-          <p><strong><i>Click "Start Lecture" below to watch the video</i></p>
-      `,
+              <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes.
+                The program will present a video lecture (~35-40 minutes) from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
+              <li>Do NOT pause, rewind, or skip parts of, the video. While you are watching the video, thought probes will interrupt the lecture occasionally, automatically pausing it and asking about what you are thinking. Please enter your responses to resume the lecture. Kindly respond to all the probes honestly.</li>
+              <li>Do NOT take notes or engage in any other task(s) during the lecture. Just focus on learning the information being presented in the lecture.</li>
+              <li>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically close the browser tab and advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</li>
+              <li>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</li>
+              <p>Do you have any questions? If so, please contact the researcher at <strong>3145831948</strong> or <strong>m.zubeiru@wustl.edu.</strong></p>
+              <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
+              <p><strong>Which of the following is correct? (select all that apply)</strong></p>
+              <ul>
+                <li><label><input type="checkbox" value="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
+                <li><label><input type="checkbox" value="B"> I should respond to all thought probes that will interrupt the lecture occasionally, asking me about what I am thinking.</label></li>
+                <li><label><input type="checkbox" value="C"> There will be four videos, total.</label></li>
+                <li><label><input type="checkbox" value="D"> I should not take notes or engage in any other tasks during the lecture.</label></li>
+                <li><label><input type="checkbox" value="E"> This tab will automatically close once the video finishes, and I will have to return to the previous tab to continue with the study.</label></li>
+                <li><label><input type="checkbox" value="F"> I am not allowed to pause, rewind or skip parts of the video lecture.</label></li>
+                </ul>
+                <br/>
+
+                <p><strong><i>Click "Start Lecture" below to watch the video</i></p>
+            `,
           correctAnswers: ['A', 'B', 'D', 'E', 'F'],
         },
         2: {
           title: 'Please read these instructions carefully!!!',
           content: `
-        <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes. 
-          The program will present a video lecture from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
-        <li>Do NOT pause, rewind, or skip parts of, the video. While you are watching the video, thought probes will interrupt the lecture occasionally, automatically pausing it and asking about what you are thinking. Please enter your responses to resume the lecture. Kindly respond to all the probes honestly.</li>
-        <li>A textbox will be provided below the lecture video for you to take notes during the lecture. Please take notes in the way that you normally would do during a lecture in typical college classes. Your notes will be automatically saved once the video finishes. Please be assured that your notes will be kept confidential and used solely for the purpose of this research study.</li>
-        <li>Do NOT engage in any other tasks (e.g., browsing the web) other than taking notes and responding to the thought probes.</li>
-        <li>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically close the browser tab and advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</li>
-        <li>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</li>
-        <p>Do you have any questions? If so, please contact the researcher at <strong>3145831948</strong> or <strong>m.zubeiru@wustl.edu.</strong></p>
-        <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
-        <p><strong>Which of the following is correct? (select all that apply)</strong></p>
-        <ul>
-          <li><label><input type="checkbox" value="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
-          <li><label><input type="checkbox" value="B"> I will be able to rewatch the video after completing the study.</label></li>
-          <li><label><input type="checkbox" value="C"> I should respond to all thought probes that will interrupt the lecture occasionally, asking me about what I am thinking.</label></li>
-          <li><label><input type="checkbox" value="D"> I am not allowed to engage in any other tasks during the lecture other than taking notes and responding to the thought probes.</label></li>
-          <li><label><input type="checkbox" value="E"> This tab will automatically close once the video finishes, and I will have to return to the previous tab to continue with the study.</label></li>
-          <li><label><input type="checkbox" value="F"> I am not allowed to pause, rewind or skip parts of the video lecture.</label></li>
-          </ul>
-          <br/>
-          
-          <p><strong><i>Click "Start Lecture" below to watch the video</i></p>
-      `,
+              <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes.
+                The program will present a video lecture from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
+              <li>Do NOT pause, rewind, or skip parts of, the video. While you are watching the video, thought probes will interrupt the lecture occasionally, automatically pausing it and asking about what you are thinking. Please enter your responses to resume the lecture. Kindly respond to all the probes honestly.</li>
+              <li>A textbox will be provided below the lecture video for you to take notes during the lecture. Please take notes in the way that you normally would do during a lecture in typical college classes. Your notes will be automatically saved once the video finishes. Please be assured that your notes will be kept confidential and used solely for the purpose of this research study.</li>
+              <li>Do NOT engage in any other tasks (e.g., browsing the web) other than taking notes and responding to the thought probes.</li>
+              <li>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically close the browser tab and advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</li>
+              <li>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</li>
+              <p>Do you have any questions? If so, please contact the researcher at <strong>3145831948</strong> or <strong>m.zubeiru@wustl.edu.</strong></p>
+              <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
+              <p><strong>Which of the following is correct? (select all that apply)</strong></p>
+              <ul>
+                <li><label><input type="checkbox" value="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
+                <li><label><input type="checkbox" value="B"> I will be able to rewatch the video after completing the study.</label></li>
+                <li><label><input type="checkbox" value="C"> I should respond to all thought probes that will interrupt the lecture occasionally, asking me about what I am thinking.</label></li>
+                <li><label><input type="checkbox" value="D"> I am not allowed to engage in any other tasks during the lecture other than taking notes and responding to the thought probes.</label></li>
+                <li><label><input type="checkbox" value="E"> This tab will automatically close once the video finishes, and I will have to return to the previous tab to continue with the study.</label></li>
+                <li><label><input type="checkbox" value="F"> I am not allowed to pause, rewind or skip parts of the video lecture.</label></li>
+                </ul>
+                <br/>
+
+                <p><strong><i>Click "Start Lecture" below to watch the video</i></p>
+            `,
           correctAnswers: ['A', 'C', 'D', 'E', 'F'],
         },
         3: {
           title: 'Please read these instructions carefully!!!',
           content: `
-        <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes. 
-          The program will present a video lecture (~35-40 minutes) from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
-        <li>Do NOT pause, rewind, or skip parts of, the video. While you are watching the video, thought probes will appear on the right side of the screen, automatically pausing the lecture occasionally and asking about what you are thinking. Please enter your responses to resume the lecture. Kindly respond to all the probes honestly.</li>
-        <li>Along with the thought probes, you will respond to pop-up messages appearing on the top left side of the screen during the lecture. Treat these as chat messages from a friend, providing a clear and detailed response to each message within ONE minute (1 Min) before it disappears. If unsure, please create a plausible response; do NOT say "No" or “I don’t know.”</li>
-        <li>Do NOT take notes or engage in any other tasks (e.g., browsing the web) during the lecture other than responding to the thought probes and chat messages.</li>
-        <li>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically close the browser tab and advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</li>
-        <li>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</li>
-        <p>Do you have any questions? If so, please contact the researcher at <strong>3145831948</strong> or <strong>m.zubeiru@wustl.edu.</strong></p>
-        <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
-        <p><strong>Which of the following is correct? (select all that apply)</strong></p>
-        <ul>
-          <li><label><input type="checkbox" value="A" id="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
-          <li><label><input type="checkbox" value="B" id="B"> I should respond to all chat messages and thought probes that will interrupt the lecture occasionally.</label></li>
-          <li><label><input type="checkbox" value="C" id="C"> I am not allowed to take notes or engage in any other tasks during the lecture other than responding to the chat messages and thought probes.</label></li>
-          <li><label><input type="checkbox" value="D" id="D"> This tab will automatically close after the video finishes, and I will have to return to the previous tab to continue with the study.</label></li>
-          <li><label><input type="checkbox" value="E" id="E"> I will receive a transcript of the lecture after watching it to review the content.</label></li>
-          <li><label><input type="checkbox" value="F" id="F"> I am not allowed to pause, rewind or skip parts of the video lecture.</label></li>
-          </ul>
-          <br/>
-          
-          <p><strong><i>Click "Start Lecture" below to watch the video</i></p>
-      `,
+              <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes.
+                The program will present a video lecture (~35-40 minutes) from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</p>
+              <li>Do NOT pause, rewind, or skip parts of, the video. While you are watching the video, thought probes will appear on the right side of the screen, automatically pausing the lecture occasionally and asking about what you are thinking. Please enter your responses to resume the lecture. Kindly respond to all the probes honestly.</li>
+              <li>Along with the thought probes, you will respond to pop-up messages appearing on the top left side of the screen during the lecture. Treat these as chat messages from a friend, providing a clear and detailed response to each message within ONE minute (1 Min) before it disappears. If unsure, please create a plausible response; do NOT say "No" or “I don’t know.”</li>
+              <li>Do NOT take notes or engage in any other tasks (e.g., browsing the web) during the lecture other than responding to the thought probes and chat messages.</li>
+              <li>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically close the browser tab and advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</li>
+              <li>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</li>
+              <p>Do you have any questions? If so, please contact the researcher at <strong>3145831948</strong> or <strong>m.zubeiru@wustl.edu.</strong></p>
+              <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
+              <p><strong>Which of the following is correct? (select all that apply)</strong></p>
+              <ul>
+                <li><label><input type="checkbox" value="A" id="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
+                <li><label><input type="checkbox" value="B" id="B"> I should respond to all chat messages and thought probes that will interrupt the lecture occasionally.</label></li>
+                <li><label><input type="checkbox" value="C" id="C"> I am not allowed to take notes or engage in any other tasks during the lecture other than responding to the chat messages and thought probes.</label></li>
+                <li><label><input type="checkbox" value="D" id="D"> This tab will automatically close after the video finishes, and I will have to return to the previous tab to continue with the study.</label></li>
+                <li><label><input type="checkbox" value="E" id="E"> I will receive a transcript of the lecture after watching it to review the content.</label></li>
+                <li><label><input type="checkbox" value="F" id="F"> I am not allowed to pause, rewind or skip parts of the video lecture.</label></li>
+                </ul>
+                <br/>
+
+                <p><strong><i>Click "Start Lecture" below to watch the video</i></p>
+            `,
           correctAnswers: ['A', 'B', 'C', 'D', 'F'],
         },
         4: {
           title: 'Please read these instructions carefully!!!',
           content: `
-        <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes. 
-          The program will present a video lecture from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</li>
-        <li>Do NOT pause, rewind, or skip parts of, the video. While you are watching the video, thought probes will appear on the right side of the screen, automatically pausing the lecture occasionally and asking about what you are thinking. Please enter your responses to resume the lecture. Kindly respond to all the probes honestly.</li>
-        <li>Along with the thought probes, you will respond to pop-up messages appearing on the top left side of the screen during the lecture. Treat these as chat messages from a friend, providing a clear and detailed response to each message within ONE minute (1 min) before it disappears. If unsure, please create a plausible response; do NOT say "No" or “I don’t know.”</li>
-        <li>A textbox will be provided below the lecture video for you to take notes during the lecture. Please take notes in the way that you normally would do during a lecture in typical college classes. Your notes will be automatically saved once the video finishes. Please be assured that your notes will be kept confidential and used solely for the purpose of this research study.</li>
-        <li>Do NOT engage in any other tasks (e.g., browsing the web) during the lecture other than taking notes and responding to the thought probes and chat messages.</li>
-        <li>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically close the browser tab and advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</li>
-        <li>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</li>
-        <p>Do you have any questions? If so, please contact the researcher at <strong>3145831948</strong> or <strong>m.zubeiru@wustl.edu.</strong></p>
-        <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
-        <p><strong>Which of the following is correct? (select all that apply)</strong></p>
-        <ul>
-          <li><label><input type="checkbox" value="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
-          <li><label><input type="checkbox" value="B"> I should respond to all chat messages and thought probes that will interrupt the lecture occasionally.</label></li>
-          <li><label><input type="checkbox" value="C"> I am not allowed to engage in any other tasks during the lecture other than taking notes and responding to the chat messages and thought probes.</label></li>
-          <li><label><input type="checkbox" value="D"> This tab will automatically close after the video lecture finishes, and I will have to return to the previous tab to continue with the study.</label></li>
-          <li><label><input type="checkbox" value="E"> I am not allowed to pause, rewind or skip parts of the video lecture.</label></li>
-          <li><label><input type="checkbox" value="F"> The video lecture will provide captions that I can turn on or off at any time.</label></li>
-          </ul>          
-          <br/>
-          
-          <p><strong><i>Click "Start Lecture" below to watch the video</i></p>
-      `,
+              <p>Welcome to Phase 1! You will be learning about the Earth, earthquakes, and volcanoes.
+                The program will present a video lecture from a geological science course. Please treat the video lecture as if you were watching it for a course that you are taking and try to learn the information presented in it.</li>
+              <li>Do NOT pause, rewind, or skip parts of, the video. While you are watching the video, thought probes will appear on the right side of the screen, automatically pausing the lecture occasionally and asking about what you are thinking. Please enter your responses to resume the lecture. Kindly respond to all the probes honestly.</li>
+              <li>Along with the thought probes, you will respond to pop-up messages appearing on the top left side of the screen during the lecture. Treat these as chat messages from a friend, providing a clear and detailed response to each message within ONE minute (1 min) before it disappears. If unsure, please create a plausible response; do NOT say "No" or “I don’t know.”</li>
+              <li>A textbox will be provided below the lecture video for you to take notes during the lecture. Please take notes in the way that you normally would do during a lecture in typical college classes. Your notes will be automatically saved once the video finishes. Please be assured that your notes will be kept confidential and used solely for the purpose of this research study.</li>
+              <li>Do NOT engage in any other tasks (e.g., browsing the web) during the lecture other than taking notes and responding to the thought probes and chat messages.</li>
+              <li>You will not be able to move to the next section until after the lecture is complete (~35-40 minutes). After the video finishes, the program will automatically close the browser tab and advance the study to the next section. Please return to the previous tab (i.e., the Qualtrics survey) to continue with the study.</li>
+              <li>During Phase 2 of the study, you will be asked to answer some questions about the information presented in the lecture.</li>
+              <p>Do you have any questions? If so, please contact the researcher at <strong>3145831948</strong> or <strong>m.zubeiru@wustl.edu.</strong></p>
+              <p>Before you proceed to watch the lecture, please answer the question below to make sure that you understood the instructions.</p>
+              <p><strong>Which of the following is correct? (select all that apply)</strong></p>
+              <ul>
+                <li><label><input type="checkbox" value="A"> I need to treat the video lecture as I would if watching for a course that I am taking because I will be tested afterwards.</label></li>
+                <li><label><input type="checkbox" value="B"> I should respond to all chat messages and thought probes that will interrupt the lecture occasionally.</label></li>
+                <li><label><input type="checkbox" value="C"> I am not allowed to engage in any other tasks during the lecture other than taking notes and responding to the chat messages and thought probes.</label></li>
+                <li><label><input type="checkbox" value="D"> This tab will automatically close after the video lecture finishes, and I will have to return to the previous tab to continue with the study.</label></li>
+                <li><label><input type="checkbox" value="E"> I am not allowed to pause, rewind or skip parts of the video lecture.</label></li>
+                <li><label><input type="checkbox" value="F"> The video lecture will provide captions that I can turn on or off at any time.</label></li>
+                </ul>
+                <br/>
+
+                <p><strong><i>Click "Start Lecture" below to watch the video</i></p>
+            `,
           correctAnswers: ['A', 'B', 'C', 'D', 'E'],
         },
       };
@@ -968,6 +980,49 @@
           saveAdditionalQuestionResponses(responseBox.value);
           container1.style.display = 'none';
         }, 60000); // Display message for 60 seconds
+      }
+
+      async function updateAndReturnMax() {
+        try {
+          // Reference to the document containing the four variables
+          const docRef = doc(db, 'scenarios', 'scenarios');
+          const docSnap = await getDoc(docRef);
+
+          if (!docSnap.exists()) {
+            console.error('Document not found!');
+            return;
+          }
+
+          // Assuming the document has four fields: var1, var2, var3, var4
+          const data = docSnap.data();
+          const fields = ['S1', 'S2', 'S3', 'S4'];
+          const values = fields.map((field) => data[field]);
+
+          // Find the maximum value among the 4
+          const maxValue = Math.max(...values);
+
+          // Find indexes of the fields that have the maximum value
+          const maxIndexes = values.reduce((acc, value, index) => {
+            if (value === maxValue) {
+              acc.push(index);
+            }
+            return acc;
+          }, []);
+
+          // Randomly select one if more than one field shares the max value
+          const selectedIndex =
+            maxIndexes[Math.floor(Math.random() * maxIndexes.length)];
+          const selectedField = fields[selectedIndex];
+
+          // Reduce the selected value by 1
+          const newValue = maxValue - 1;
+
+          // Update the document with the new value for the selected field
+          await updateDoc(docRef, { [selectedField]: newValue });
+          return selectedField;
+        } catch (error) {
+          console.error('Error updating the maximum value:', error);
+        }
       }
     </script>
     <script src="https://www.youtube.com/iframe_api"></script>
