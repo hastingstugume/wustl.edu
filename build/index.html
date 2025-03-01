@@ -986,7 +986,6 @@
 
       async function updateAndReturnMaxScenario() {
         try {
-          // Reference to the document containing the four variables
           const docRef = doc(db, 'scenarios', 'scenarios');
           const docSnap = await getDoc(docRef);
 
@@ -995,7 +994,6 @@
             return;
           }
 
-          // Assuming the document has four fields: var1, var2, var3, var4
           const data = docSnap.data();
           const fields = ['S1', 'S2', 'S3', 'S4'];
           const values = fields.map((field) => data[field]);
@@ -1011,7 +1009,6 @@
             return acc;
           }, []);
 
-          // Randomly select one if more than one field shares the max value
           const selectedIndex =
             maxIndexes[Math.floor(Math.random() * maxIndexes.length)];
           const selectedField = fields[selectedIndex];
@@ -1019,7 +1016,6 @@
           // Reduce the selected value by 1
           const newValue = maxValue - 1;
 
-          // Update the document with the new value for the selected field
           await updateDoc(docRef, { [selectedField]: newValue });
           return selectedField;
         } catch (error) {
